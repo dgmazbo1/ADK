@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "qa": "node scripts/qa-site.js"
+  },
+  "dependencies": {
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.8.0"
+  }
+}
