@@ -1,0 +1,76 @@
+# shadcn React Setup Notes
+
+This ADK website is currently a static HTML/CSS/JavaScript site. It does not yet have a React framework, Tailwind CSS build pipeline, TypeScript configuration, or `components.json` for shadcn/ui.
+
+The requested React files have been placed in the conventional shadcn path:
+
+- Components: `/components/ui`
+- Shared utilities: `/lib/utils.ts`
+- Demo entry: `/components/header-demo.tsx`
+
+Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
+
+The current static site stylesheet is `/styles.css`. In a shadcn React app, the global Tailwind stylesheet would usually be:
+
+- Next.js App Router: `/app/globals.css`
+- Vite React: `/src/index.css` or `/src/globals.css`
+
+## Current Status
+
+- shadcn project structure: not configured yet
+- Tailwind CSS: not configured yet
+- TypeScript: not configured yet
+- Current production page: still served from `/index.html`
+- `tsconfig.shadcn.json`: added only to validate the copied React component files during migration
+
+## Recommended Setup
+
+For a new Vite React app:
+
+```bash
+npm create vite@latest adk-react -- --template react-ts
+cd adk-react
+npm install
+npm install -D tailwindcss @tailwindcss/vite
+npx shadcn@latest init -t vite
+npx shadcn@latest add button navigation-menu
+npm install lucide-react @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu clsx tailwind-merge
+```
+
+For a new Next.js app:
+
+```bash
+npx create-next-app@latest adk-react --typescript --tailwind --eslint --app --import-alias "@/*"
+cd adk-react
+npx shadcn@latest init -t next
+npx shadcn@latest add button navigation-menu
+npm install lucide-react @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu clsx tailwind-merge
+```
+
+For an existing React app, shadcn's current CLI supports:
+
+```bash
+npx shadcn@latest init
+npx shadcn@latest add button navigation-menu
+```
+
+Make sure `tsconfig.json` includes the alias expected by the copied files:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+```
+
+## Integration Questions To Resolve Before Wiring It In
+
+- What app framework should ADK move to: Vite or Next.js?
+- Should this generic header be adapted to ADK navigation labels and the existing ADK logo?
+- Should state remain local, or should nav/cart state connect to a future store?
+- Which image source should power the header/demo pages: local ADK assets, ImageGen outputs, or stock placeholders?
+- Should responsive behavior match the current static ADK navigation or replace it completely?

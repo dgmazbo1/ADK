@@ -6,7 +6,11 @@
     <title>After Dark Kreations | Custom Welding, Fabrication &amp; Truck Parts in Henderson, NV</title>
     <meta
       name="description"
-      content="After Dark Kreations builds American-made custom welding, fabrication, CAD-designed parts, truck components, overland accessories, trailer repairs, air ride systems, hydraulics, and one-off metalwork in Henderson, Nevada."
+      content="After Dark Kreations builds custom welding, CAD-designed parts, prototypes, truck components, overland accessories, trailer repairs, air ride systems, hydraulics, and one-off metalwork in Henderson, Nevada."
+    />
+    <meta
+      name="keywords"
+      content="After Dark Kreations, ADK, custom welding Henderson NV, custom fabrication Henderson NV, TIG welding Henderson NV, truck fabrication, trailer repair Henderson, CAD design fabrication, laser cutting Henderson NV, air ride fabrication, hydraulic fabrication, overland accessories, American made truck parts, Peterbilt air ride kit, custom truck parts"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,24 +18,31 @@
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260425-banner-tabs" />
+    <link rel="stylesheet" href="./styles.css?v=20260426-technical-studio-2" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <div class="cad-loader" aria-hidden="true">
+      <span></span>
+      <p>Loading ADK drawing</p>
+    </div>
+    <div class="cursor-guide" aria-hidden="true"></div>
 
-    <div class="top-system" aria-label="After Dark Kreations banners">
+    <div class="top-system" aria-label="After Dark Kreations status banners">
       <div class="patriot-scroll" aria-label="Proudly made in America banner">
         <div class="patriot-scroll__track">
           <span>Proudly Made in America</span>
+          <span>Henderson, Nevada</span>
+          <span>ADK Fabrication</span>
           <span>Proudly Made in America</span>
+          <span>Henderson, Nevada</span>
+          <span>ADK Fabrication</span>
           <span>Proudly Made in America</span>
+          <span>Henderson, Nevada</span>
+          <span>ADK Fabrication</span>
           <span>Proudly Made in America</span>
-          <span>Proudly Made in America</span>
-          <span>Proudly Made in America</span>
-          <span>Proudly Made in America</span>
-          <span>Proudly Made in America</span>
-          <span>Proudly Made in America</span>
-          <span>Proudly Made in America</span>
+          <span>Henderson, Nevada</span>
+          <span>ADK Fabrication</span>
         </div>
       </div>
       <div class="origin-line">
@@ -39,9 +50,31 @@
         <a href="mailto:Rudy@AfterDarkKreations.com">Rudy@AfterDarkKreations.com</a>
         <a href="https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011" target="_blank" rel="noopener noreferrer">2053 Pabco Rd, Henderson, NV 89011</a>
       </div>
+      <div class="capability-marquee" aria-label="ADK capabilities">
+        <div class="capability-marquee__track">
+          <span>TIG Welding</span>
+          <span>CAD Design</span>
+          <span>Custom Fabrication</span>
+          <span>Truck Parts</span>
+          <span>Trailer Repair</span>
+          <span>Air Ride</span>
+          <span>Hydraulics</span>
+          <span>Overland Components</span>
+          <span>Laser Cutting</span>
+          <span>TIG Welding</span>
+          <span>CAD Design</span>
+          <span>Custom Fabrication</span>
+          <span>Truck Parts</span>
+          <span>Trailer Repair</span>
+          <span>Air Ride</span>
+          <span>Hydraulics</span>
+          <span>Overland Components</span>
+          <span>Laser Cutting</span>
+        </div>
+      </div>
     </div>
 
-    <header class="site-header">
+    <header class="site-header" data-site-header>
       <a class="brand" href="#main" aria-label="After Dark Kreations home">
         <img
           src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png"
@@ -49,74 +82,102 @@
         />
         <span>After Dark Kreations</span>
       </a>
-      <nav class="site-nav" aria-label="Primary navigation">
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span></span>
+        <span></span>
+        <span class="visually-hidden">Open navigation</span>
+      </button>
+      <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation">
         <a href="#main">Home</a>
-        <a href="#capabilities">Services</a>
-        <a href="#shop">Store</a>
-        <a href="#work">Gallery</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#parts">Parts</a>
+        <a href="#work">Shop Work</a>
+        <a href="#request">Build Request</a>
         <a href="#about">About</a>
-        <a href="#notes">Blog</a>
-        <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="header-contact">
         <a href="tel:+17028109021">(702) 810-9021</a>
-        <a class="small-button" href="#request">Request pricing</a>
+        <a class="small-button" href="#request">Request a Build</a>
       </div>
     </header>
 
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
-        <div class="hero__copy">
-          <p class="eyebrow">Henderson, Nevada Fabrication Shop</p>
-          <h1 id="hero-title">Built After Dark. Made to Outlast.</h1>
+        <div class="hero__copy reveal">
+          <p class="eyebrow">Henderson, NV Fabrication Shop</p>
+          <h1 id="hero-title">Built After Dark. Engineered To Fit.</h1>
           <p>
-            ADK is a custom welding, fabrication, CAD design, prototyping, truck
-            parts, trailer repair, air ride, hydraulics, and overland components
-            shop based in Henderson, Nevada.
+            ADK builds custom welding, CAD-designed parts, prototypes, trailer repairs, air ride
+            components, overland accessories, and one-off metalwork from its Henderson, Nevada shop.
           </p>
           <div class="hero__actions">
-            <a class="button" href="#request">Start a custom build</a>
-            <a class="text-link" href="#shop">View ADK parts</a>
+            <a class="button line-button" href="#request">Request a Build</a>
+            <a class="text-link" href="#parts">View Parts</a>
           </div>
+          <dl class="hero-meta" aria-label="ADK project details">
+            <div>
+              <dt>Build Lab</dt>
+              <dd>CAD to finished metal</dd>
+            </div>
+            <div>
+              <dt>Shop</dt>
+              <dd>After Dark Kreations / ADK</dd>
+            </div>
+          </dl>
         </div>
 
-        <div class="image-board" aria-label="Fabrication image study">
-          <figure class="image-board__main">
-            <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/fabrication-shop-v2-2JfevkRadwYjNzsMAGApkz.webp"
-              alt="Fabrication shop floor with work tables and metalworking equipment"
-            />
+        <div class="fabrication-board reveal" aria-label="Technical fabrication board">
+          <div class="blueprint-panel" aria-hidden="true">
+            <svg viewBox="0 0 320 210" role="img" aria-label="Animated CAD line drawing">
+              <path d="M18 34 H284 V168 H52 V82 H238" />
+              <path d="M52 82 L18 34" />
+              <path d="M238 82 L284 168" />
+              <circle cx="82" cy="120" r="21" />
+              <circle cx="222" cy="120" r="21" />
+              <path d="M104 120 H200" />
+            </svg>
+          </div>
+          <figure class="hero-video-panel">
+            <video
+              src="./assets/adk-hero-fabrication.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              aria-label="ADK fabrication hero video"
+            ></video>
+            <figcaption>
+              <span>Shop media</span>
+              <strong>Fabrication study / ADK</strong>
+            </figcaption>
           </figure>
-          <figure class="image-board__detail image-board__detail--weld">
+          <figure class="board-detail board-detail--weld">
             <img
+              loading="lazy"
               src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/tig-weld-bead-v2-37VV8vDFsaWWaket3RCc8x.webp"
               alt="Close-up TIG weld bead on metal"
             />
             <figcaption>TIG weld detail</figcaption>
           </figure>
-          <figure class="image-board__detail image-board__detail--part">
+          <figure class="board-detail board-detail--part">
             <img
+              loading="lazy"
               src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/truck-parts-v2-XEpWn9SrbHcBf4W89SiSnS.webp"
-              alt="Truck parts and air ride components arranged on a shop bench"
+              alt="Custom truck fabrication parts arranged on a workbench"
             />
-            <figcaption>Bench-fit components</figcaption>
+            <figcaption>Fitment hardware</figcaption>
           </figure>
-          <div class="cad-lines" aria-hidden="true"></div>
-          <dl class="hero-spec">
-            <div>
-              <dt>Shop</dt>
-              <dd>After Dark Kreations / ADK</dd>
-            </div>
-            <div>
-              <dt>Location</dt>
-              <dd>2053 Pabco Rd, Henderson, NV</dd>
-            </div>
-            <div>
-              <dt>Focus</dt>
-              <dd>Custom fabrication + American-made truck parts</dd>
-            </div>
-          </dl>
+          <ul class="spec-tags" aria-label="Build standards">
+            <li>CAD Designed</li>
+            <li>TIG Welded</li>
+            <li>Test Fit</li>
+            <li>Built In-House</li>
+            <li>Material Check</li>
+            <li>Nevada Built</li>
+          </ul>
+          <div class="adk-stamp" aria-hidden="true">ADK</div>
         </div>
       </section>
 
@@ -125,236 +186,275 @@
         <div class="services-rendered__rail">
           <span>TIG Welding</span>
           <span>Metal Fabrication</span>
-          <span>Custom Truck Fabrication</span>
+          <span>CAD Design</span>
+          <span>Prototyping</span>
           <span>Trailer Repair</span>
-          <span>Air Ride &amp; Suspension</span>
-          <span>CAD Design &amp; Prototyping</span>
           <span>Laser Cutting</span>
-          <span>Repairs</span>
-          <span>Peterbilt Parts</span>
-          <span>Air Ride Kits</span>
-          <span>Custom Fabricated Parts</span>
+          <span>Air Ride</span>
+          <span>Suspension</span>
+          <span>Hydraulics</span>
+          <span>Overland Accessories</span>
           <span>Cooling / Tank Products</span>
           <span>Mounts / Brackets</span>
+          <span>One-Off Metalwork</span>
           <span>TIG Welding</span>
           <span>Metal Fabrication</span>
-          <span>Custom Truck Fabrication</span>
+          <span>CAD Design</span>
+          <span>Prototyping</span>
           <span>Trailer Repair</span>
-          <span>Air Ride &amp; Suspension</span>
-          <span>CAD Design &amp; Prototyping</span>
           <span>Laser Cutting</span>
-          <span>Repairs</span>
-          <span>Peterbilt Parts</span>
-          <span>Air Ride Kits</span>
-          <span>Custom Fabricated Parts</span>
+          <span>Air Ride</span>
+          <span>Suspension</span>
+          <span>Hydraulics</span>
+          <span>Overland Accessories</span>
           <span>Cooling / Tank Products</span>
           <span>Mounts / Brackets</span>
+          <span>One-Off Metalwork</span>
         </div>
       </div>
 
       <section class="section capability-index" id="capabilities" aria-labelledby="capability-title">
-        <div class="section-heading">
-          <p class="eyebrow">Capability index</p>
-          <h2 id="capability-title">What ADK builds</h2>
-          <p>Compact shop capabilities for repairs, prototypes, production parts, and one-off metalwork.</p>
+        <div class="section-heading reveal">
+          <p class="eyebrow">CAD to Metal</p>
+          <h2 id="capability-title">What ADK Builds</h2>
+          <p>
+            From CAD files to finished metal, ADK handles custom fabrication, repair, and part
+            production with shop-level precision.
+          </p>
         </div>
 
-        <div class="index-list">
-          <article><span>01</span><h3>TIG welding</h3><p>Controlled welds for aluminum, stainless, titanium, magnesium, and custom components.</p></article>
-          <article><span>02</span><h3>Custom metal fabrication</h3><p>Cut, formed, fitted, welded, and finished parts for real installation conditions.</p></article>
-          <article><span>03</span><h3>CAD design + prototyping</h3><p>Digital part design, mockups, first-run parts, revisions, and fitment checks.</p></article>
-          <article><span>04</span><h3>Truck parts + fabrication</h3><p>Peterbilt parts, air ride, suspension, hydraulics, brackets, mounts, and tanks.</p></article>
-          <article><span>05</span><h3>Trailer repair</h3><p>Frame repair, reinforcement, hitch repair, cross-members, and structural welding.</p></article>
-          <article><span>06</span><h3>Laser cutting</h3><p>Repeatable profiles, tabs, flat parts, brackets, and small production runs.</p></article>
-          <article><span>07</span><h3>Overland accessories</h3><p>Mounts, brackets, carriers, tank support, and hard-use utility hardware.</p></article>
-          <article><span>08</span><h3>One-off metalwork</h3><p>If it needs to hold, fit, move, or survive abuse, ADK can build it.</p></article>
-        </div>
-      </section>
-
-      <section class="section product-spec" id="shop" aria-labelledby="product-title">
-        <div class="section-heading">
-          <p class="eyebrow">Industrial catalog</p>
-          <h2 id="product-title">Built around fitment</h2>
-          <p>ADK parts are treated like spec work: clear fitment, build notes, and pricing by request.</p>
-        </div>
-
-        <div class="spec-sheet">
-          <div class="spec-sheet__intro">
-            <p class="eyebrow">Featured system</p>
-            <h3>Peterbilt air ride programs</h3>
-            <p>
-              Air ride kits and suspension systems designed around fitment,
-              strength, and real truck use. Contact ADK for model confirmation,
-              lead time, and pricing.
-            </p>
-          </div>
-
-          <div class="spec-items">
-            <article>
-              <h4>Peterbilt 389 Rear Air Ride Kit</h4>
-              <dl>
-                <div><dt>Fitment</dt><dd>Peterbilt 389</dd></div>
-                <div><dt>Built for</dt><dd>Rear air ride conversion</dd></div>
-                <div><dt>Status</dt><dd>Request pricing</dd></div>
-              </dl>
-            </article>
-            <article>
-              <h4>Peterbilt 389 Front Air Leaf Suspension</h4>
-              <dl>
-                <div><dt>Fitment</dt><dd>Peterbilt 389</dd></div>
-                <div><dt>Material</dt><dd>Fabricated steel components</dd></div>
-                <div><dt>Status</dt><dd>Request pricing</dd></div>
-              </dl>
-            </article>
-            <article>
-              <h4>Peterbilt 389 Full Air Ride System</h4>
-              <dl>
-                <div><dt>Fitment</dt><dd>Peterbilt 389</dd></div>
-                <div><dt>Built for</dt><dd>Full system setup</dd></div>
-                <div><dt>Status</dt><dd>Request pricing</dd></div>
-              </dl>
-            </article>
-            <article>
-              <h4>Peterbilt 379 Air Ride Kit</h4>
-              <dl>
-                <div><dt>Fitment</dt><dd>Peterbilt 379</dd></div>
-                <div><dt>Material</dt><dd>Shop-built brackets + hardware</dd></div>
-                <div><dt>Status</dt><dd>Request pricing</dd></div>
-              </dl>
-            </article>
-            <article>
-              <h4>Peterbilt 359/379/389 Gen III Air Ride Kit</h4>
-              <dl>
-                <div><dt>Fitment</dt><dd>Peterbilt 359 / 379 / 389</dd></div>
-                <div><dt>Built for</dt><dd>Multi-model Gen III setup</dd></div>
-                <div><dt>Status</dt><dd>Request pricing</dd></div>
-              </dl>
-            </article>
-            <article>
-              <h4>Cooling / tanks / mounts / brackets</h4>
-              <dl>
-                <div><dt>Fitment</dt><dd>Custom and production</dd></div>
-                <div><dt>Material</dt><dd>Aluminum, stainless, steel</dd></div>
-                <div><dt>Status</dt><dd>Request pricing</dd></div>
-              </dl>
-            </article>
-          </div>
+        <div class="index-list" data-active-row>
+          <article class="reveal">
+            <span>01</span>
+            <h3>TIG Welding</h3>
+            <p>Clean, controlled welds for stainless, aluminum, titanium, magnesium, and custom components.</p>
+            <small>Process: fit-up / prep / heat control</small>
+          </article>
+          <article class="reveal">
+            <span>02</span>
+            <h3>Custom Metal Fabrication</h3>
+            <p>One-off metalwork, brackets, mounts, structural pieces, and job-specific metal solutions.</p>
+            <small>Built around clearance, load, and install conditions</small>
+          </article>
+          <article class="reveal">
+            <span>03</span>
+            <h3>CAD Design + Prototyping</h3>
+            <p>Digital part design, mockups, and refinements before the first cut.</p>
+            <small>Measure first. Model next. Cut with intent.</small>
+          </article>
+          <article class="reveal">
+            <span>04</span>
+            <h3>Truck Parts</h3>
+            <p>Custom parts, air ride components, suspension pieces, and fitment-focused truck products.</p>
+            <small>Peterbilt programs and custom truck support</small>
+          </article>
+          <article class="reveal">
+            <span>05</span>
+            <h3>Trailer Repair</h3>
+            <p>Frame repair, reinforcement, hitch repair, cross members, and structural welding.</p>
+            <small>Repair work with strength and serviceability in mind</small>
+          </article>
+          <article class="reveal">
+            <span>06</span>
+            <h3>Laser Cutting</h3>
+            <p>Precise cuts for repeatable parts, brackets, panels, tabs, and components.</p>
+            <small>Repeatable geometry for production-minded parts</small>
+          </article>
+          <article class="reveal">
+            <span>07</span>
+            <h3>Air Ride + Hydraulics</h3>
+            <p>Custom air ride, hydraulic work, suspension modification, and system support.</p>
+            <small>Built for movement, routing, and real truck use</small>
+          </article>
+          <article class="reveal">
+            <span>08</span>
+            <h3>Overland Components</h3>
+            <p>Mounts, brackets, storage solutions, tank mounts, and field-ready accessories.</p>
+            <small>Utility hardware made to fit and hold</small>
+          </article>
         </div>
       </section>
 
-      <section class="section process" id="process" aria-labelledby="process-title">
-        <div class="section-heading">
-          <p class="eyebrow">Process diagram</p>
-          <h2 id="process-title">From CAD to finished metal</h2>
-          <p>Measured, drawn, fabricated, checked, and finished with the right process for the part.</p>
+      <section class="section workflow" id="process" aria-labelledby="workflow-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">From Measurement To Metal</p>
+          <h2 id="workflow-title">A Build Path With A Reason</h2>
+          <p>Every job moves through the same practical logic: understand the use case, control the fitment, then build the metal.</p>
         </div>
-
-        <ol class="process-line">
-          <li><span>01</span><strong>Talk through the build</strong><p>Use case, vehicle, dimensions, install limits, and expected abuse.</p></li>
-          <li><span>02</span><strong>Measure what matters</strong><p>Mounting points, clearance, service access, movement, and load.</p></li>
-          <li><span>03</span><strong>CAD / mockup</strong><p>Digital design or physical layout before cutting material.</p></li>
-          <li><span>04</span><strong>Cut / weld / fabricate</strong><p>Material-specific prep, fit-up, TIG work, forming, and assembly.</p></li>
-          <li><span>05</span><strong>Test fit</strong><p>Checked before finish, install, or shipment.</p></li>
-          <li><span>06</span><strong>Finish / ship / install</strong><p>Raw, paint-ready, powder-ready, installed, or shipped nationwide.</p></li>
+        <ol class="workflow-diagram" aria-label="ADK fabrication process">
+          <li class="reveal"><span>01</span><strong>Measure</strong><p>Vehicle, part, clearance, mounting points, and service access.</p></li>
+          <li class="reveal"><span>02</span><strong>Model</strong><p>CAD layout, mockup, or fixture planning before material is cut.</p></li>
+          <li class="reveal"><span>03</span><strong>Cut</strong><p>Laser cut, saw cut, formed, drilled, or prepped for fit-up.</p></li>
+          <li class="reveal"><span>04</span><strong>Weld</strong><p>Material-aware welding and controlled fabrication.</p></li>
+          <li class="reveal"><span>05</span><strong>Test Fit</strong><p>Checked against the real install condition before finish.</p></li>
+          <li class="reveal"><span>06</span><strong>Finish</strong><p>Installed, shipped, paint-ready, powder-ready, or raw by request.</p></li>
         </ol>
       </section>
 
-      <section class="section materials" id="about" aria-labelledby="materials-title">
-        <div class="section-heading">
-          <p class="eyebrow">Materials &amp; methods</p>
-          <h2 id="materials-title">The right process for the right material</h2>
-          <p>Different metals require different prep, heat control, filler choices, and finishing expectations.</p>
+      <section class="section product-engineering" id="parts" aria-labelledby="parts-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Part Status</p>
+          <h2 id="parts-title">Parts With A Purpose</h2>
+          <p>Built around fitment, function, and real-world use.</p>
         </div>
 
-        <div class="material-grid">
-          <article><span class="material-swatch steel"></span><h3>Steel</h3><p>Structural brackets, trailer repair, mounts, and chassis-related fabrication.</p></article>
-          <article><span class="material-swatch stainless"></span><h3>Stainless</h3><p>Clean TIG work for corrosion-resistant tanks, assemblies, and detail parts.</p></article>
-          <article><span class="material-swatch aluminum"></span><h3>Aluminum</h3><p>Lightweight tanks, overland accessories, mounts, and custom components.</p></article>
-          <article><span class="material-swatch titanium"></span><h3>Titanium</h3><p>Specialty fabrication where shielding, cleanliness, and heat control matter.</p></article>
-          <article><span class="material-swatch magnesium"></span><h3>Magnesium</h3><p>Specialty metalwork requiring careful process control and shop judgment.</p></article>
+        <div class="product-lab reveal">
+          <div class="product-tabs" role="tablist" aria-label="Product categories">
+            <button type="button" role="tab" aria-selected="true" data-product="air-ride">Air Ride Systems</button>
+            <button type="button" role="tab" aria-selected="false" data-product="mounts">Mounts + Brackets</button>
+            <button type="button" role="tab" aria-selected="false" data-product="tanks">Tanks + Cooling</button>
+            <button type="button" role="tab" aria-selected="false" data-product="trailers">Trailer Components</button>
+            <button type="button" role="tab" aria-selected="false" data-product="overland">Overland Parts</button>
+            <button type="button" role="tab" aria-selected="false" data-product="oneoff">One-Off Fabrication</button>
+          </div>
+
+          <div class="product-spec-panel">
+            <figure>
+              <img
+                data-product-image
+                loading="lazy"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/air-ride-user_6d45a40e.jpg"
+                alt="Air ride fabrication components for truck fitment"
+              />
+              <figcaption data-product-caption>Peterbilt air ride fitment program</figcaption>
+            </figure>
+            <div class="product-copy">
+              <p class="eyebrow" data-product-label>Air Ride Systems</p>
+              <h3 data-product-title>Peterbilt Air Ride Programs</h3>
+              <p data-product-copy>
+                ADK builds air ride kits and suspension support around fitment, load, routing, and long-term service access.
+              </p>
+              <dl class="spec-fields">
+                <div><dt>Fitment</dt><dd data-fitment>Peterbilt 359 / 379 / 389</dd></div>
+                <div><dt>Material</dt><dd data-product-material>Fabricated steel components</dd></div>
+                <div><dt>Built For</dt><dd data-use>Ride height, clearance, and real truck use</dd></div>
+                <div><dt>Status</dt><dd data-status>Request pricing</dd></div>
+              </dl>
+              <div class="part-list" aria-label="Available product examples">
+                <span>Peterbilt 389 Rear Air Ride Kit</span>
+                <span>Peterbilt 389 Front Air Leaf Suspension</span>
+                <span>Peterbilt 389 Full Air Ride System</span>
+                <span>Peterbilt 379 Air Ride Kit</span>
+                <span>Peterbilt 359/379/389 Gen III Air Ride Kit</span>
+              </div>
+              <a class="button line-button" href="#request">Request Pricing</a>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="section notes-faq" id="notes" aria-labelledby="notes-title">
-        <div class="section-heading">
-          <p class="eyebrow">From the current ADK site</p>
-          <h2 id="notes-title">Shop notes</h2>
-          <p>Technical topics carried forward from the existing site, reframed as a compact resource index.</p>
+      <section class="section materials" id="materials" aria-labelledby="materials-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Materials</p>
+          <h2 id="materials-title">Materials Matter</h2>
+          <p>Different metals require different prep, heat control, filler, process, and experience.</p>
         </div>
-        <div class="notes-list">
-          <a href="#request"><span>2026-03-15</span>Custom TIG Welding in Henderson, NV</a>
-          <a href="#request"><span>2026-03-08</span>What Materials Can Be TIG Welded?</a>
-          <a href="#request"><span>2026-02-28</span>Metal Fabrication Services in Henderson, Nevada</a>
-        </div>
-      </section>
 
-      <section class="section notes-faq" id="faq" aria-labelledby="faq-title">
-        <div class="section-heading">
-          <p class="eyebrow">FAQ</p>
-          <h2 id="faq-title">Before the build starts</h2>
-          <p>Common buyer questions from the current site structure, kept simple and useful.</p>
-        </div>
-        <div class="faq-list">
-          <details>
-            <summary>Do you ship parts nationwide?</summary>
-            <p>Yes. ADK is based in Henderson, Nevada and ships purpose-built parts nationwide.</p>
-          </details>
-          <details>
-            <summary>Can ADK handle one-off fabrication?</summary>
-            <p>Yes. ADK handles custom welding, brackets, mounts, prototypes, repairs, tanks, and one-off metalwork.</p>
-          </details>
-          <details>
-            <summary>How do I request pricing?</summary>
-            <p>Send vehicle details, photos, timeline, and budget range through the build request form.</p>
-          </details>
+        <div class="material-lab reveal">
+          <div class="material-tabs" role="tablist" aria-label="Material selector">
+            <button type="button" role="tab" aria-selected="true" data-material="steel">Steel</button>
+            <button type="button" role="tab" aria-selected="false" data-material="stainless">Stainless</button>
+            <button type="button" role="tab" aria-selected="false" data-material="aluminum">Aluminum</button>
+            <button type="button" role="tab" aria-selected="false" data-material="titanium">Titanium</button>
+            <button type="button" role="tab" aria-selected="false" data-material="magnesium">Magnesium</button>
+          </div>
+          <div class="material-readout">
+            <span class="material-swatch steel" data-swatch></span>
+            <div>
+              <p class="eyebrow" data-material-label>Steel</p>
+              <h3 data-material-title>Structural fabrication with repeatable fitment.</h3>
+              <dl class="material-table">
+                <div><dt>Common Use</dt><dd data-material-use>Brackets, trailer repair, mounts, chassis-related fabrication.</dd></div>
+                <div><dt>Process Note</dt><dd data-material-process>Fit-up, weld access, load path, and finish prep all matter.</dd></div>
+                <div><dt>Consideration</dt><dd data-material-consideration>Strength is only useful when the part also fits and can be serviced.</dd></div>
+                <div><dt>ADK Capability</dt><dd data-material-capability>Cut, weld, reinforce, mock up, test fit, and finish.</dd></div>
+              </dl>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="section shop-work" id="work" aria-labelledby="work-title">
-        <div class="section-heading">
-          <p class="eyebrow">Shop work</p>
-          <h2 id="work-title">Fabrication details, not template galleries</h2>
-          <p>Welds, fixtures, product details, CAD-to-metal work, and finished components.</p>
+        <div class="section-heading reveal">
+          <p class="eyebrow">Shop Work</p>
+          <h2 id="work-title">Parts, Repairs, Welds, And Fitment</h2>
+          <p>A closer look at the metalwork, product details, and custom work coming out of ADK.</p>
+        </div>
+
+        <div class="portfolio-filters reveal" aria-label="Portfolio filters">
+          <button type="button" aria-pressed="true" data-filter="all">All</button>
+          <button type="button" aria-pressed="false" data-filter="weld">TIG Weld Detail</button>
+          <button type="button" aria-pressed="false" data-filter="truck">Truck Parts</button>
+          <button type="button" aria-pressed="false" data-filter="repair">Trailer Repair</button>
+          <button type="button" aria-pressed="false" data-filter="cad">CAD To Metal</button>
         </div>
 
         <div class="masonry">
-          <figure class="span-2">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/hero-welding-v2-Dwy2UyuPXnV2BT8WswKmAm.webp" alt="Welder creating sparks in a fabrication shop" />
-            <figcaption><span>TIG weld detail</span><small>Controlled heat / shop finish</small></figcaption>
+          <figure class="span-2 reveal" data-category="weld">
+            <img
+              loading="lazy"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/hero-welding-v2-Dwy2UyuPXnV2BT8WswKmAm.webp"
+              alt="Welder creating controlled sparks in a fabrication shop"
+            />
+            <figcaption><span>TIG Weld Detail</span><small>Controlled heat / shop finish</small></figcaption>
           </figure>
-          <figure>
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/laser-cutting-user_be584be4.jpg" alt="Laser cut metal fabrication detail" />
-            <figcaption><span>CAD to metal</span><small>Cut profiles / brackets</small></figcaption>
+          <figure class="reveal" data-category="cad">
+            <img
+              loading="lazy"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/laser-cutting-user_be584be4.jpg"
+              alt="Laser cut metal component detail"
+            />
+            <figcaption><span>Laser Cut Components</span><small>Cut profiles / brackets</small></figcaption>
           </figure>
-          <figure class="tall">
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/trailer-repair-user_a0ea39bf.jpg" alt="Trailer repair and structural fabrication work" />
-            <figcaption><span>Trailer repair</span><small>Structural reinforcement</small></figcaption>
+          <figure class="tall reveal" data-category="repair">
+            <img
+              loading="lazy"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/trailer-repair-user_a0ea39bf.jpg"
+              alt="Trailer repair and structural fabrication work"
+            />
+            <figcaption><span>Trailer Repair</span><small>Structural reinforcement</small></figcaption>
           </figure>
-          <figure>
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/coolant-tank-v1_c26f55db.png" alt="Custom fabricated tank component" />
-            <figcaption><span>Tank products</span><small>Aluminum / shop-built</small></figcaption>
+          <figure class="reveal" data-category="truck">
+            <img
+              loading="lazy"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/air-ride-user_6d45a40e.jpg"
+              alt="Air ride suspension fabrication components"
+            />
+            <figcaption><span>Air Ride Component</span><small>Steel / Peterbilt fitment</small></figcaption>
           </figure>
-          <figure>
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/air-ride-user_6d45a40e.jpg" alt="Air ride suspension fabrication components" />
-            <figcaption><span>Air ride</span><small>Fitment hardware</small></figcaption>
+          <figure class="reveal" data-category="cad">
+            <img
+              loading="lazy"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/coolant-tank-v1_c26f55db.png"
+              alt="Custom fabricated cooling tank component"
+            />
+            <figcaption><span>Cooling / Tank Product</span><small>Aluminum / shop-built</small></figcaption>
+          </figure>
+          <figure class="wide reveal" data-category="truck">
+            <img
+              loading="lazy"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/fabrication-shop-v2-2JfevkRadwYjNzsMAGApkz.webp"
+              alt="Fabrication shop floor with work tables and metalworking equipment"
+            />
+            <figcaption><span>Shop Floor</span><small>Measure / mockup / build</small></figcaption>
           </figure>
         </div>
       </section>
 
       <section class="section request" id="request" aria-labelledby="request-title">
-        <div class="section-heading">
-          <p class="eyebrow">Project intake</p>
-          <h2 id="request-title">Request a build</h2>
-          <p>Send the details. ADK will review the project and let you know what is possible.</p>
+        <div class="section-heading reveal">
+          <p class="eyebrow">Build Request</p>
+          <h2 id="request-title">Start A Build Request</h2>
+          <p>Send the details, photos, and project goals. ADK will review what you need and follow up with the next step.</p>
         </div>
 
-        <form class="build-form">
+        <form class="build-form reveal">
           <label>Name<input name="name" type="text" autocomplete="name" required /></label>
           <label>Phone<input name="phone" type="tel" autocomplete="tel" required /></label>
           <label>Email<input name="email" type="email" autocomplete="email" required /></label>
-          <label>Vehicle / project type<input name="project" type="text" /></label>
+          <label>Vehicle / Project Type<input name="project" type="text" /></label>
           <label class="wide">What do you need built?<textarea name="need" rows="5" required></textarea></label>
-          <label>Upload photos<input name="photos" type="file" multiple /></label>
+          <label class="upload-field">Upload photos<input name="photos" type="file" multiple /></label>
           <label>Timeline
             <select name="timeline">
               <option>Flexible</option>
@@ -378,21 +478,63 @@
             <label><input type="radio" name="contact-method" value="email" /> Email</label>
             <label><input type="radio" name="contact-method" value="text" /> Text</label>
           </fieldset>
-          <button class="button" type="submit">Send build request</button>
+          <button class="button line-button" type="submit">Send Build Request</button>
           <p class="form-note" role="status" aria-live="polite"></p>
         </form>
+      </section>
+
+      <section class="section shop-standard" id="about" aria-labelledby="about-title">
+        <div class="shop-standard__copy reveal">
+          <p class="eyebrow">Shop Standard</p>
+          <h2 id="about-title">Built By People Who Actually Fabricate</h2>
+          <p>
+            After Dark Kreations was built around real fabrication work, not shortcuts. Every part,
+            repair, and one-off build is approached with the same standard: it needs to fit, hold,
+            function, and survive real use.
+          </p>
+          <blockquote>Built like it is going on our own truck.</blockquote>
+        </div>
+        <div class="shop-standard__panel reveal">
+          <img
+            loading="lazy"
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/fabrication-shop-v2-2JfevkRadwYjNzsMAGApkz.webp"
+            alt="ADK fabrication shop workbench and metalworking equipment"
+          />
+          <dl>
+            <div><dt>Location</dt><dd>2053 Pabco Rd, Henderson, NV 89011</dd></div>
+            <div><dt>Standard</dt><dd>Proudly Made in America. In-house fabrication. CAD-supported work.</dd></div>
+            <div><dt>Service Area</dt><dd>Las Vegas Valley and nationwide parts support.</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section shop-notes" id="notes" aria-labelledby="notes-title">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Shop Notes</p>
+          <h2 id="notes-title">Technical Notes From The Shop</h2>
+          <p>Resource topics carried forward from the current ADK site, reframed as a compact technical library.</p>
+        </div>
+        <div class="notes-list">
+          <a class="reveal" href="#request"><span>TIG / Henderson NV</span>TIG Welding in Henderson, NV</a>
+          <a class="reveal" href="#materials"><span>Materials</span>What Materials Can Be TIG Welded?</a>
+          <a class="reveal" href="#capabilities"><span>Fabrication</span>Metal Fabrication Services in Henderson, Nevada</a>
+          <a class="reveal" href="#process"><span>CAD</span>CAD Design for Custom Parts</a>
+          <a class="reveal" href="#capabilities"><span>Repair</span>Trailer Repair and Structural Reinforcement</a>
+          <a class="reveal" href="#parts"><span>Air Ride</span>Air Ride Fabrication</a>
+        </div>
       </section>
     </main>
 
     <footer class="site-footer" id="contact">
-      <div class="footer-brand">
+      <div class="footer-nameplate">
         <img
           src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png"
           alt="After Dark Kreations ADK logo"
         />
         <div>
+          <p class="eyebrow">Proudly Made in America</p>
           <strong>After Dark Kreations / ADK</strong>
-          <p>Proudly Made in America. Henderson, Nevada - Serving Las Vegas Valley and Nationwide.</p>
+          <p>Henderson, Nevada - Serving Las Vegas Valley and Nationwide.</p>
         </div>
       </div>
 
@@ -404,7 +546,15 @@
           <a href="https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011" target="_blank" rel="noopener noreferrer">2053 Pabco Rd, Henderson, NV 89011</a>
         </div>
         <div>
-          <h3>Services</h3>
+          <h3>Navigation</h3>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#parts">Parts</a>
+          <a href="#work">Shop Work</a>
+          <a href="#request">Build Request</a>
+          <a href="#about">About</a>
+        </div>
+        <div>
+          <h3>Capabilities</h3>
           <a href="#capabilities">Custom welding Henderson NV</a>
           <a href="#capabilities">Custom fabrication Henderson NV</a>
           <a href="#capabilities">Trailer repair Henderson</a>
@@ -412,24 +562,22 @@
           <a href="#capabilities">Laser cutting Henderson NV</a>
         </div>
         <div>
-          <h3>Parts</h3>
-          <a href="#shop">Peterbilt air ride kit</a>
-          <a href="#shop">Air ride fabrication</a>
-          <a href="#shop">Hydraulic fabrication</a>
-          <a href="#shop">Overland accessories</a>
-          <a href="#shop">American made truck parts</a>
+          <h3>Parts / Categories</h3>
+          <a href="#parts">Peterbilt air ride kit</a>
+          <a href="#parts">Mounts + brackets</a>
+          <a href="#parts">Cooling / tank products</a>
+          <a href="#parts">Hydraulic fabrication</a>
+          <a href="#parts">Overland accessories</a>
         </div>
         <div>
-          <h3>Company</h3>
-          <a href="#about">About Us</a>
-          <a href="#work">Gallery</a>
-          <a href="#notes">Blog</a>
-          <a href="#faq">FAQ</a>
-          <a href="#contact">Contact</a>
+          <h3>Social</h3>
+          <a href="#contact">Instagram</a>
+          <a href="#contact">Facebook</a>
+          <a href="#contact">YouTube</a>
         </div>
       </div>
     </footer>
 
-    <script src="./script.js?v=20260425-banner-tabs" defer></script>
+    <script src="./script.js?v=20260426-technical-studio-2" defer></script>
   </body>
 </html>
