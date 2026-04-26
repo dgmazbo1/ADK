@@ -7,6 +7,7 @@ The requested React files have been placed in the conventional shadcn path:
 - Components: `/components/ui`
 - Shared utilities: `/lib/utils.ts`
 - Demo entry: `/components/header-demo.tsx`
+- Additional demo entry: `/components/navbar1-demo.tsx`
 
 Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
 
@@ -19,9 +20,11 @@ The current static site stylesheet is `/styles.css`. In a shadcn React app, the 
 
 - shadcn project structure: not configured yet
 - Tailwind CSS: not configured yet
-- TypeScript: not configured yet
+- TypeScript: validation-only config is available at `/tsconfig.shadcn.json`
 - Current production page: still served from `/index.html`
 - `tsconfig.shadcn.json`: added only to validate the copied React component files during migration
+- Added UI primitives: `accordion`, `button`, `input`, `label`, `navigation-menu`, and `sheet`
+- Added block component: `shadcnblocks-com-navbar1`
 
 ## Recommended Setup
 
@@ -33,8 +36,8 @@ cd adk-react
 npm install
 npm install -D tailwindcss @tailwindcss/vite
 npx shadcn@latest init -t vite
-npx shadcn@latest add button navigation-menu
-npm install lucide-react @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu clsx tailwind-merge
+npx shadcn@latest add accordion button input label navigation-menu sheet
+npm install lucide-react @radix-ui/react-accordion @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu @radix-ui/react-dialog @radix-ui/react-label clsx tailwind-merge
 ```
 
 For a new Next.js app:
@@ -43,15 +46,15 @@ For a new Next.js app:
 npx create-next-app@latest adk-react --typescript --tailwind --eslint --app --import-alias "@/*"
 cd adk-react
 npx shadcn@latest init -t next
-npx shadcn@latest add button navigation-menu
-npm install lucide-react @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu clsx tailwind-merge
+npx shadcn@latest add accordion button input label navigation-menu sheet
+npm install lucide-react @radix-ui/react-accordion @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu @radix-ui/react-dialog @radix-ui/react-label clsx tailwind-merge
 ```
 
 For an existing React app, shadcn's current CLI supports:
 
 ```bash
 npx shadcn@latest init
-npx shadcn@latest add button navigation-menu
+npx shadcn@latest add accordion button input label navigation-menu sheet
 ```
 
 Make sure `tsconfig.json` includes the alias expected by the copied files:
@@ -74,3 +77,4 @@ Make sure `tsconfig.json` includes the alias expected by the copied files:
 - Should state remain local, or should nav/cart state connect to a future store?
 - Which image source should power the header/demo pages: local ADK assets, ImageGen outputs, or stock placeholders?
 - Should responsive behavior match the current static ADK navigation or replace it completely?
+- The provided navbar currently uses remote logo/image props and lucide icons. No Unsplash assets are required until it is adapted into a real ADK page.
