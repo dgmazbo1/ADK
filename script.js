@@ -31,6 +31,16 @@ if (menuToggle && siteNav && headerContact) {
   });
 }
 
+if (siteNav) {
+  const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+  siteNav.querySelectorAll("a").forEach((link) => {
+    const linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "") || "/";
+    if (linkPath === currentPath) {
+      link.setAttribute("aria-current", "page");
+    }
+  });
+}
+
 const revealItems = document.querySelectorAll(".reveal, .workflow-diagram");
 
 if (prefersReducedMotion) {
@@ -52,43 +62,6 @@ if (prefersReducedMotion) {
     item.style.transitionDelay = `${Math.min(index * 28, 220)}ms`;
     revealObserver.observe(item);
   });
-}
-
-const board = document.querySelector(".fabrication-board");
-
-if (board && !prefersReducedMotion) {
-  board.addEventListener("pointermove", (event) => {
-    if (window.innerWidth < 900) return;
-
-    const rect = board.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 5.5;
-    const y = ((event.clientY - rect.top) / rect.height - 0.5) * -5.5;
-    board.style.setProperty("--tilt-x", `${y}deg`);
-    board.style.setProperty("--tilt-y", `${x}deg`);
-  });
-
-  board.addEventListener("pointerleave", () => {
-    board.style.removeProperty("--tilt-x");
-    board.style.removeProperty("--tilt-y");
-  });
-}
-
-const cursorGuide = document.querySelector(".cursor-guide");
-
-if (cursorGuide && !prefersReducedMotion) {
-  window.addEventListener(
-    "pointermove",
-    (event) => {
-      if (window.innerWidth < 980 || event.pointerType !== "mouse") {
-        cursorGuide.style.opacity = "0";
-        return;
-      }
-
-      cursorGuide.style.opacity = "1";
-      cursorGuide.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
-    },
-    { passive: true },
-  );
 }
 
 const indexList = document.querySelector("[data-active-row]");
@@ -342,8 +315,12 @@ const formNote = document.querySelector(".form-note");
 if (buildForm && formNote) {
   buildForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    formNote.textContent =
-      "Build request staged. Call ADK at (702) 810-9021 to connect this form to live intake.";
-    buildForm.querySelector("button[type='submit']").textContent = "Request Staged";
+    const isContactForm = buildForm.classList.contains("contact-form");
+    formNote.textContent = isContactForm
+      ? "Message staged. Call ADK at (702) 810-9021 to connect this form to live contact."
+      : "Build request staged. Call ADK at (702) 810-9021 to connect this form to live intake.";
+    buildForm.querySelector("button[type='submit']").textContent = isContactForm
+      ? "Message Staged"
+      : "Request Staged";
   });
 }

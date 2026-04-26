@@ -21,11 +21,24 @@ const types = {
 const server = http.createServer((request, response) => {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   const pathname = decodeURIComponent(requestUrl.pathname);
-  const filePath = path.normalize(path.join(root, pathname === "/" ? "index.html" : pathname));
+  const cleanPathname = pathname === "/" ? "/index.html" : pathname;
+  const rawFilePath = path.normalize(path.join(root, cleanPathname));
 
-  if (!filePath.startsWith(root)) {
+  if (!rawFilePath.startsWith(root)) {
     response.writeHead(403);
     response.end("Forbidden");
+    return;
+  }
+
+  const candidates = path.extname(rawFilePath)
+    ? [rawFilePath]
+    : [path.join(rawFilePath, "index.html"), `${rawFilePath}.html`];
+
+  const filePath = candidates.find((candidate) => fs.existsSync(candidate));
+
+  if (!filePath) {
+    response.writeHead(404);
+    response.end("Not found");
     return;
   }
 
