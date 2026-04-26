@@ -9,6 +9,7 @@ The requested React files have been placed in the conventional shadcn path:
 - Demo entry: `/components/header-demo.tsx`
 - Additional demo entry: `/components/navbar1-demo.tsx`
 - Feature spotlight demo entry: `/components/feature-spotlight-demo.tsx`
+- Expandable hero button demo entry: `/components/hero-button-demo.tsx`
 
 Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
 
@@ -27,6 +28,9 @@ The current static site stylesheet is `/styles.css`. In a shadcn React app, the 
 - Added UI primitives: `accordion`, `button`, `input`, `label`, `navigation-menu`, and `sheet`
 - Added block component: `shadcnblocks-com-navbar1`
 - Added feature component: `feature-spotlight`
+- Added interactive component: `hero-button-expendable`
+- Added animation/shader dependencies for future React use: `framer-motion` and `@paper-design/shaders-react`
+- The live static site uses `/styles.css`; the provided Tailwind theme snippet should be applied later to the actual Tailwind global stylesheet after the project is migrated.
 
 ## Recommended Setup
 
@@ -39,7 +43,7 @@ npm install
 npm install -D tailwindcss @tailwindcss/vite
 npx shadcn@latest init -t vite
 npx shadcn@latest add accordion button input label navigation-menu sheet
-npm install lucide-react @radix-ui/react-accordion @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu @radix-ui/react-dialog @radix-ui/react-label clsx tailwind-merge
+npm install lucide-react framer-motion @paper-design/shaders-react @radix-ui/react-accordion @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu @radix-ui/react-dialog @radix-ui/react-label clsx tailwind-merge
 ```
 
 For a new Next.js app:
@@ -49,7 +53,7 @@ npx create-next-app@latest adk-react --typescript --tailwind --eslint --app --im
 cd adk-react
 npx shadcn@latest init -t next
 npx shadcn@latest add accordion button input label navigation-menu sheet
-npm install lucide-react @radix-ui/react-accordion @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu @radix-ui/react-dialog @radix-ui/react-label clsx tailwind-merge
+npm install lucide-react framer-motion @paper-design/shaders-react @radix-ui/react-accordion @radix-ui/react-slot class-variance-authority @radix-ui/react-icons @radix-ui/react-navigation-menu @radix-ui/react-dialog @radix-ui/react-label clsx tailwind-merge
 ```
 
 For an existing React app, shadcn's current CLI supports:

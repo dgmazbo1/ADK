@@ -6,6 +6,59 @@ const siteNav = document.querySelector(".site-nav");
 const headerContact = document.querySelector(".header-contact");
 const navDropdowns = document.querySelectorAll("[data-nav-dropdown]");
 
+document.body.insertAdjacentHTML(
+  "beforeend",
+  `
+    <div class="build-modal" data-build-modal hidden>
+      <div class="build-modal__shell" role="dialog" aria-modal="true" aria-labelledby="build-modal-title">
+        <div class="build-modal__backdrop" data-build-modal-close></div>
+        <section class="build-modal__panel" aria-describedby="build-modal-copy">
+          <button class="build-modal__close" type="button" aria-label="Close build request" data-build-modal-close>
+            <span aria-hidden="true"></span>
+          </button>
+          <div class="build-modal__content">
+            <div class="build-modal__story">
+              <p class="eyebrow">Build Intake</p>
+              <h2 id="build-modal-title">Start A Build Request</h2>
+              <p id="build-modal-copy">Send the project basics now. Photos, measurements, vehicle details, and use-case notes help ADK review what is possible before the first cut.</p>
+              <div class="build-modal__points" aria-label="Build request details">
+                <div><strong>CAD Supported</strong><span>Measurements, mockups, and fitment review.</span></div>
+                <div><strong>Shop Reviewed</strong><span>ADK checks material, access, timeline, and scope.</span></div>
+              </div>
+              <blockquote>Built like it is going on our own truck.</blockquote>
+            </div>
+            <form class="build-modal__form" data-build-modal-form>
+              <div class="build-modal__success" data-build-modal-success hidden>
+                <span aria-hidden="true">✓</span>
+                <h3>Request queued.</h3>
+                <p>This demo modal does not transmit data yet. Use the full build request page when you are ready to send details to ADK.</p>
+                <a class="button line-button" href="/build-request">Open Full Build Request</a>
+              </div>
+              <div data-build-modal-fields>
+                <h3>Project Basics</h3>
+                <label>Name<input name="name" type="text" autocomplete="name" required /></label>
+                <label>Phone<input name="phone" type="tel" autocomplete="tel" required /></label>
+                <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+                <label>Vehicle / Project<input name="project" type="text" /></label>
+                <label>What do you need built?<textarea name="need" rows="4" required></textarea></label>
+                <button class="button line-button" type="submit" data-build-modal-submit>Submit Request</button>
+                <p class="build-modal__note">For photo uploads, budget range, and timeline, use the full request page.</p>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  `,
+);
+
+const buildModal = document.querySelector("[data-build-modal]");
+const buildModalForm = document.querySelector("[data-build-modal-form]");
+const buildModalFields = document.querySelector("[data-build-modal-fields]");
+const buildModalSuccess = document.querySelector("[data-build-modal-success]");
+const buildModalSubmit = document.querySelector("[data-build-modal-submit]");
+let buildModalTrigger = null;
+
 function setHeaderState() {
   header?.classList.toggle("is-condensed", window.scrollY > 18);
 }
@@ -50,6 +103,7 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    if (buildModal && !buildModal.hidden) closeBuildModal();
     closeNavDropdowns();
     closeMobileMenu();
   }
@@ -89,6 +143,62 @@ if (siteNav) {
     : null;
   activeDropdownTrigger?.setAttribute("aria-current", "page");
 }
+
+function openBuildModal(trigger) {
+  if (!buildModal) return;
+  buildModalTrigger = trigger;
+  closeMobileMenu();
+  buildModal.hidden = false;
+  document.body.classList.add("build-modal-open");
+  window.requestAnimationFrame(() => {
+    buildModal.classList.add("is-open");
+    buildModal.querySelector("input")?.focus();
+  });
+}
+
+function closeBuildModal() {
+  if (!buildModal) return;
+  buildModal.classList.remove("is-open");
+  document.body.classList.remove("build-modal-open");
+  window.setTimeout(() => {
+    buildModal.hidden = true;
+    buildModalForm?.reset();
+    if (buildModalFields) buildModalFields.hidden = false;
+    if (buildModalSuccess) buildModalSuccess.hidden = true;
+    if (buildModalSubmit) {
+      buildModalSubmit.disabled = false;
+      buildModalSubmit.textContent = "Submit Request";
+    }
+    buildModalTrigger?.focus?.();
+    buildModalTrigger = null;
+  }, prefersReducedMotion ? 0 : 220);
+}
+
+document
+  .querySelectorAll('a.button[href="/build-request"], a.small-button[href="/build-request"], a.text-link[href="/build-request"]')
+  .forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      openBuildModal(link);
+    });
+  });
+
+document.querySelectorAll("[data-build-modal-close]").forEach((control) => {
+  control.addEventListener("click", closeBuildModal);
+});
+
+buildModalForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (buildModalSubmit) {
+    buildModalSubmit.disabled = true;
+    buildModalSubmit.textContent = "Reviewing...";
+  }
+  window.setTimeout(() => {
+    if (buildModalFields) buildModalFields.hidden = true;
+    if (buildModalSuccess) buildModalSuccess.hidden = false;
+    buildModalSuccess?.querySelector("a")?.focus();
+  }, prefersReducedMotion ? 0 : 750);
+});
 
 const revealItems = document.querySelectorAll(".reveal, .workflow-diagram");
 
