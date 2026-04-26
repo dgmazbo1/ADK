@@ -4,6 +4,7 @@ const header = document.querySelector("[data-site-header]");
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
 const headerContact = document.querySelector(".header-contact");
+const navDropdowns = document.querySelectorAll("[data-nav-dropdown]");
 
 function setHeaderState() {
   header?.classList.toggle("is-condensed", window.scrollY > 18);
@@ -12,6 +13,48 @@ function setHeaderState() {
 setHeaderState();
 window.addEventListener("scroll", setHeaderState, { passive: true });
 
+function closeNavDropdowns(exceptGroup) {
+  navDropdowns.forEach((group) => {
+    if (group === exceptGroup) return;
+    group.classList.remove("is-open");
+    group.querySelector(".nav-trigger")?.setAttribute("aria-expanded", "false");
+  });
+}
+
+function closeMobileMenu() {
+  menuToggle?.setAttribute("aria-expanded", "false");
+  siteNav?.classList.remove("is-open");
+  headerContact?.classList.remove("is-open");
+  document.body.classList.remove("menu-open");
+  closeNavDropdowns();
+}
+
+navDropdowns.forEach((group) => {
+  const trigger = group.querySelector(".nav-trigger");
+  if (!trigger) return;
+
+  trigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const isOpen = trigger.getAttribute("aria-expanded") === "true";
+    closeNavDropdowns(group);
+    group.classList.toggle("is-open", !isOpen);
+    trigger.setAttribute("aria-expanded", String(!isOpen));
+  });
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest?.("[data-nav-dropdown]")) {
+    closeNavDropdowns();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeNavDropdowns();
+    closeMobileMenu();
+  }
+});
+
 if (menuToggle && siteNav && headerContact) {
   menuToggle.addEventListener("click", () => {
     const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
@@ -19,15 +62,11 @@ if (menuToggle && siteNav && headerContact) {
     siteNav.classList.toggle("is-open", !isOpen);
     headerContact.classList.toggle("is-open", !isOpen);
     document.body.classList.toggle("menu-open", !isOpen);
+    if (isOpen) closeNavDropdowns();
   });
 
   siteNav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      menuToggle.setAttribute("aria-expanded", "false");
-      siteNav.classList.remove("is-open");
-      headerContact.classList.remove("is-open");
-      document.body.classList.remove("menu-open");
-    });
+    link.addEventListener("click", closeMobileMenu);
   });
 }
 
@@ -39,6 +78,16 @@ if (siteNav) {
       link.setAttribute("aria-current", "page");
     }
   });
+
+  const dropdownControlByPath = {
+    "/capabilities": "nav-capabilities-panel",
+    "/parts": "nav-parts-panel",
+    "/shop-work": "nav-work-panel",
+  };
+  const activeDropdownTrigger = dropdownControlByPath[currentPath]
+    ? siteNav.querySelector(`[aria-controls="${dropdownControlByPath[currentPath]}"]`)
+    : null;
+  activeDropdownTrigger?.setAttribute("aria-current", "page");
 }
 
 const revealItems = document.querySelectorAll(".reveal, .workflow-diagram");

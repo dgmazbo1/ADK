@@ -11,13 +11,59 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles.css?v=20260426-technical-bg-2" />
+    <link rel="stylesheet" href="/styles.css?v=20260426-dropdowns-2" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="cad-loader" aria-hidden="true"><span></span><p>Loading ADK drawing</p></div>
     <div class="top-system" aria-label="After Dark Kreations banners"><div class="patriot-scroll" aria-label="Proudly made in America banner"><div class="patriot-scroll__track"><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span><span>Proudly Made in America</span></div></div><div class="origin-line"><a href="tel:+17028109021">(702) 810-9021</a><a href="mailto:Rudy@AfterDarkKreations.com">Rudy@AfterDarkKreations.com</a><a href="https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011" target="_blank" rel="noopener noreferrer">2053 Pabco Rd, Henderson, NV 89011</a></div></div>
-    <header class="site-header" data-site-header><a class="brand" href="/" aria-label="After Dark Kreations home"><img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="After Dark Kreations ADK logo" /><span>After Dark Kreations</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span></span><span></span><span class="visually-hidden">Open navigation</span></button><nav class="site-nav" id="primary-navigation" aria-label="Primary navigation"><a href="/">Home</a><a href="/capabilities">Capabilities</a><a href="/parts">Parts</a><a href="/shop-work">Shop Work</a><a href="/build-request">Build Request</a><a href="/about">About</a><a href="/contact">Contact</a></nav><div class="header-contact"><a href="tel:+17028109021">(702) 810-9021</a><a class="small-button" href="/build-request">Request a Build</a></div></header>
+    <header class="site-header" data-site-header>
+      <a class="brand" href="/" aria-label="After Dark Kreations home">
+        <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="After Dark Kreations ADK logo" />
+        <span>After Dark Kreations</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span></span>
+        <span></span>
+        <span class="visually-hidden">Open navigation</span>
+      </button>
+      <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation">
+        <a class="nav-link" href="/">Home</a>
+        <div class="nav-dropdown-group" data-nav-dropdown>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-capabilities-panel">Capabilities</button>
+          <div class="nav-dropdown" id="nav-capabilities-panel">
+            <a href="/capabilities"><span>TIG Welding</span><small>Clean welds for stainless, aluminum, titanium, and magnesium.</small></a>
+            <a href="/capabilities"><span>CAD + Prototyping</span><small>Measure, model, mock up, and refine before the first cut.</small></a>
+            <a href="/capabilities"><span>Trailer Repair</span><small>Frames, hitches, cross members, reinforcements, and structural welding.</small></a>
+            <a href="/capabilities"><span>Air Ride + Hydraulics</span><small>Suspension support, routing, mounts, and fitment-focused fabrication.</small></a>
+          </div>
+        </div>
+        <div class="nav-dropdown-group" data-nav-dropdown>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-parts-panel">Parts</button>
+          <div class="nav-dropdown" id="nav-parts-panel">
+            <a href="/parts"><span>Peterbilt Air Ride</span><small>389 rear air ride, front air leaf, full systems, and Gen III kits.</small></a>
+            <a href="/parts"><span>Mounts + Brackets</span><small>Custom mounting hardware built around real install points.</small></a>
+            <a href="/parts"><span>Tanks + Cooling</span><small>Fabricated tanks, reservoirs, and cooling support products.</small></a>
+            <a href="/parts"><span>One-Off Parts</span><small>Project-specific metalwork when the part does not exist yet.</small></a>
+          </div>
+        </div>
+        <div class="nav-dropdown-group" data-nav-dropdown>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-work-panel">Shop Work</button>
+          <div class="nav-dropdown" id="nav-work-panel">
+            <a href="/shop-work"><span>Weld Detail</span><small>TIG welds, material prep, and close-up fabrication work.</small></a>
+            <a href="/shop-work"><span>CAD To Metal</span><small>Parts moving from measurement and model into finished metal.</small></a>
+            <a href="/shop-work"><span>Truck + Trailer Work</span><small>Air ride, trailer repair, overland hardware, and finished parts.</small></a>
+          </div>
+        </div>
+        <a class="nav-link" href="/build-request">Build Request</a>
+        <a class="nav-link" href="/about">About</a>
+        <a class="nav-link" href="/contact">Contact</a>
+      </nav>
+      <div class="header-contact">
+        <a href="tel:+17028109021">(702) 810-9021</a>
+        <a class="small-button" href="/build-request">Request a Build</a>
+      </div>
+    </header>
     <main id="main">
       <section class="section page-hero" aria-labelledby="page-title"><div class="section-heading reveal"><p class="eyebrow">Build Request</p><h1 id="page-title">Start A Custom Build Request</h1><p>Send project details, photos, measurements, vehicle information, timeline, and budget range. The more context ADK has up front, the more accurately the shop can review the work.</p></div></section>
       <section class="section request" aria-labelledby="request-title">
@@ -38,6 +84,6 @@
       </section>
     </main>
     <footer class="site-footer"><div class="footer-nameplate"><img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="After Dark Kreations ADK logo" /><div><p class="eyebrow">Proudly Made in America</p><strong>After Dark Kreations / ADK</strong><p>Henderson, Nevada - Serving Las Vegas Valley and Nationwide.</p></div></div><div class="footer-grid"><div><h3>Contact</h3><a href="tel:+17028109021">(702) 810-9021</a><a href="mailto:Rudy@AfterDarkKreations.com">Rudy@AfterDarkKreations.com</a><a href="https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011" target="_blank" rel="noopener noreferrer">2053 Pabco Rd, Henderson, NV 89011</a></div><div><h3>Navigation</h3><a href="/capabilities">Capabilities</a><a href="/parts">Parts</a><a href="/shop-work">Shop Work</a><a href="/build-request">Build Request</a><a href="/about">About</a></div><div><h3>Capabilities</h3><a href="/capabilities">Custom welding Henderson NV</a><a href="/capabilities">Custom fabrication Henderson NV</a><a href="/capabilities">Trailer repair Henderson</a><a href="/capabilities">CAD design fabrication</a><a href="/capabilities">Laser cutting Henderson NV</a></div><div><h3>Parts / Categories</h3><a href="/parts">Peterbilt air ride kit</a><a href="/parts">Mounts + brackets</a><a href="/parts">Cooling / tank products</a><a href="/parts">Hydraulic fabrication</a><a href="/parts">Overland accessories</a></div><div><h3>Social</h3><a href="/contact">Instagram</a><a href="/contact">Facebook</a><a href="/contact">YouTube</a></div></div></footer>
-    <script src="/script.js?v=20260426-technical-bg-2" defer></script>
+    <script src="/script.js?v=20260426-dropdowns-2" defer></script>
   </body>
 </html>

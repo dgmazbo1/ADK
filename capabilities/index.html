@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css?v=20260426-technical-bg-2" />
+    <link rel="stylesheet" href="/styles.css?v=20260426-dropdowns-2" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -38,11 +38,47 @@
         <img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="After Dark Kreations ADK logo" />
         <span>After Dark Kreations</span>
       </a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span></span><span></span><span class="visually-hidden">Open navigation</span></button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+        <span></span>
+        <span></span>
+        <span class="visually-hidden">Open navigation</span>
+      </button>
       <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation">
-        <a href="/">Home</a><a href="/capabilities">Capabilities</a><a href="/parts">Parts</a><a href="/shop-work">Shop Work</a><a href="/build-request">Build Request</a><a href="/about">About</a><a href="/contact">Contact</a>
+        <a class="nav-link" href="/">Home</a>
+        <div class="nav-dropdown-group" data-nav-dropdown>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-capabilities-panel">Capabilities</button>
+          <div class="nav-dropdown" id="nav-capabilities-panel">
+            <a href="/capabilities"><span>TIG Welding</span><small>Clean welds for stainless, aluminum, titanium, and magnesium.</small></a>
+            <a href="/capabilities"><span>CAD + Prototyping</span><small>Measure, model, mock up, and refine before the first cut.</small></a>
+            <a href="/capabilities"><span>Trailer Repair</span><small>Frames, hitches, cross members, reinforcements, and structural welding.</small></a>
+            <a href="/capabilities"><span>Air Ride + Hydraulics</span><small>Suspension support, routing, mounts, and fitment-focused fabrication.</small></a>
+          </div>
+        </div>
+        <div class="nav-dropdown-group" data-nav-dropdown>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-parts-panel">Parts</button>
+          <div class="nav-dropdown" id="nav-parts-panel">
+            <a href="/parts"><span>Peterbilt Air Ride</span><small>389 rear air ride, front air leaf, full systems, and Gen III kits.</small></a>
+            <a href="/parts"><span>Mounts + Brackets</span><small>Custom mounting hardware built around real install points.</small></a>
+            <a href="/parts"><span>Tanks + Cooling</span><small>Fabricated tanks, reservoirs, and cooling support products.</small></a>
+            <a href="/parts"><span>One-Off Parts</span><small>Project-specific metalwork when the part does not exist yet.</small></a>
+          </div>
+        </div>
+        <div class="nav-dropdown-group" data-nav-dropdown>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-controls="nav-work-panel">Shop Work</button>
+          <div class="nav-dropdown" id="nav-work-panel">
+            <a href="/shop-work"><span>Weld Detail</span><small>TIG welds, material prep, and close-up fabrication work.</small></a>
+            <a href="/shop-work"><span>CAD To Metal</span><small>Parts moving from measurement and model into finished metal.</small></a>
+            <a href="/shop-work"><span>Truck + Trailer Work</span><small>Air ride, trailer repair, overland hardware, and finished parts.</small></a>
+          </div>
+        </div>
+        <a class="nav-link" href="/build-request">Build Request</a>
+        <a class="nav-link" href="/about">About</a>
+        <a class="nav-link" href="/contact">Contact</a>
       </nav>
-      <div class="header-contact"><a href="tel:+17028109021">(702) 810-9021</a><a class="small-button" href="/build-request">Request a Build</a></div>
+      <div class="header-contact">
+        <a href="tel:+17028109021">(702) 810-9021</a>
+        <a class="small-button" href="/build-request">Request a Build</a>
+      </div>
     </header>
 
     <main id="main">
@@ -107,6 +143,6 @@
         <div><h3>Social</h3><a href="/contact">Instagram</a><a href="/contact">Facebook</a><a href="/contact">YouTube</a></div>
       </div>
     </footer>
-    <script src="/script.js?v=20260426-technical-bg-2" defer></script>
+    <script src="/script.js?v=20260426-dropdowns-2" defer></script>
   </body>
 </html>
