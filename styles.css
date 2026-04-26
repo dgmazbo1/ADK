@@ -1084,6 +1084,147 @@ dd {
   margin-top: 1.25rem;
 }
 
+.feature-runway {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.4rem);
+}
+
+.feature-spotlight {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(280px, 1.08fr);
+  align-items: center;
+  gap: clamp(1.2rem, 4vw, 3rem);
+  min-height: 360px;
+  padding: clamp(1.1rem, 4vw, 2.8rem);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(49, 94, 116, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49, 94, 116, 0.045) 1px, transparent 1px),
+    rgba(251, 248, 240, 0.84);
+  background-size: 34px 34px;
+  overflow: hidden;
+}
+
+.feature-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0.7rem;
+  border: 1px solid rgba(49, 94, 116, 0.12);
+  pointer-events: none;
+}
+
+.feature-spotlight::after {
+  content: "";
+  position: absolute;
+  right: -14%;
+  top: -34%;
+  width: 38%;
+  height: 160%;
+  background: linear-gradient(180deg, transparent, rgba(49, 94, 116, 0.12), rgba(201, 130, 43, 0.08), transparent);
+  transform: rotate(33deg);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.feature-spotlight--reverse {
+  grid-template-columns: minmax(280px, 1.08fr) minmax(0, 0.92fr);
+}
+
+.feature-spotlight--reverse .feature-spotlight__copy {
+  grid-column: 2;
+}
+
+.feature-spotlight--reverse .feature-spotlight__media {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.feature-spotlight--dark {
+  color: var(--paper-soft);
+  background:
+    linear-gradient(rgba(125, 192, 215, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 192, 215, 0.07) 1px, transparent 1px),
+    linear-gradient(135deg, #16232a, #20272b);
+  background-size: 34px 34px, 34px 34px, auto;
+}
+
+.feature-spotlight--dark .eyebrow {
+  color: #8db5c8;
+}
+
+.feature-spotlight--dark .feature-spotlight__copy p:not(.eyebrow) {
+  color: rgba(251, 248, 240, 0.72);
+}
+
+.feature-spotlight--dark .button {
+  border-color: rgba(251, 248, 240, 0.72);
+  background: rgba(251, 248, 240, 0.96);
+  color: var(--ink);
+}
+
+.feature-spotlight__copy,
+.feature-spotlight__media {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-spotlight__copy {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+}
+
+.feature-spotlight__copy h2 {
+  max-width: 15ch;
+  margin-top: 0.72rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 2.85vw, 2.55rem);
+  font-weight: 400;
+  line-height: 1.03;
+}
+
+.feature-spotlight__copy p:not(.eyebrow) {
+  max-width: 38rem;
+  margin-top: 0.95rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.72;
+}
+
+.feature-spotlight__copy .button {
+  margin-top: 1.45rem;
+}
+
+.feature-spotlight__media {
+  min-height: clamp(230px, 36vw, 390px);
+  border: 1px solid var(--line);
+  background: rgba(232, 230, 223, 0.72);
+  overflow: hidden;
+}
+
+.feature-spotlight__media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(135deg, transparent 42%, rgba(125, 192, 215, 0.18), transparent 58%),
+    linear-gradient(180deg, transparent, rgba(30, 36, 40, 0.18));
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.feature-spotlight__media img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  filter: saturate(0.9) contrast(1.02);
+  transform: scale(1.03);
+  animation: spotlight-float 7s ease-in-out infinite;
+}
+
 .preview-masonry {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -1915,6 +2056,12 @@ select:focus {
   72% { transform: scaleX(1); opacity: 0.9; }
 }
 
+@keyframes spotlight-float {
+  0%,
+  100% { transform: scale(1.03) translate3d(0, 0, 0); }
+  50% { transform: scale(1.06) translate3d(1.2%, -1.1%, 0); }
+}
+
 @media (max-width: 1080px) {
   .site-header {
     top: 5.35rem;
@@ -2064,6 +2211,18 @@ select:focus {
     grid-template-columns: 1fr;
   }
 
+  .feature-spotlight,
+  .feature-spotlight--reverse {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .feature-spotlight--reverse .feature-spotlight__copy,
+  .feature-spotlight--reverse .feature-spotlight__media {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .material-swatch {
     min-height: 140px;
   }
@@ -2131,7 +2290,8 @@ select:focus {
 
   .section-heading h2,
   .shop-standard h1,
-  .shop-standard h2 {
+  .shop-standard h2,
+  .feature-spotlight__copy h2 {
     font-size: clamp(1.5rem, 7vw, 2.05rem);
   }
 
@@ -2145,6 +2305,14 @@ select:focus {
   .notes-list,
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+
+  .feature-spotlight {
+    padding: 1rem;
+  }
+
+  .feature-spotlight__media {
+    min-height: 220px;
   }
 
   .hero-meta div + div {

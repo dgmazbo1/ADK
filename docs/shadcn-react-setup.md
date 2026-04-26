@@ -8,6 +8,7 @@ The requested React files have been placed in the conventional shadcn path:
 - Shared utilities: `/lib/utils.ts`
 - Demo entry: `/components/header-demo.tsx`
 - Additional demo entry: `/components/navbar1-demo.tsx`
+- Feature spotlight demo entry: `/components/feature-spotlight-demo.tsx`
 
 Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
 
@@ -25,6 +26,7 @@ The current static site stylesheet is `/styles.css`. In a shadcn React app, the 
 - `tsconfig.shadcn.json`: added only to validate the copied React component files during migration
 - Added UI primitives: `accordion`, `button`, `input`, `label`, `navigation-menu`, and `sheet`
 - Added block component: `shadcnblocks-com-navbar1`
+- Added feature component: `feature-spotlight`
 
 ## Recommended Setup
 
