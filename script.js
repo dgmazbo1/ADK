@@ -1,4 +1,16 @@
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isAdminRoute = window.location.pathname.startsWith("/admin");
+const isAdminLoginRoute = window.location.pathname.replace(/\/$/, "") === "/admin/login";
+
+// Development-only route protection. Replace with server-side authentication,
+// secure sessions, and environment-backed secrets before production admin use.
+if (isAdminRoute && !isAdminLoginRoute && !window.localStorage.getItem("adk.admin.session")) {
+  window.location.replace("/admin/login");
+}
+
+if (isAdminLoginRoute && window.localStorage.getItem("adk.admin.session")) {
+  window.location.replace("/admin");
+}
 
 const header = document.querySelector("[data-site-header]");
 const menuToggle = document.querySelector(".menu-toggle");
@@ -6,9 +18,10 @@ const siteNav = document.querySelector(".site-nav");
 const headerContact = document.querySelector(".header-contact");
 const navDropdowns = document.querySelectorAll("[data-nav-dropdown]");
 
-document.body.insertAdjacentHTML(
-  "beforeend",
-  `
+if (!isAdminRoute) {
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `
     <div class="build-modal" data-build-modal hidden>
       <div class="build-modal__shell" role="dialog" aria-modal="true" aria-labelledby="build-modal-title">
         <div class="build-modal__backdrop" data-build-modal-close></div>
@@ -54,7 +67,8 @@ document.body.insertAdjacentHTML(
       </div>
     </div>
   `,
-);
+  );
+}
 
 const buildModal = document.querySelector("[data-build-modal]");
 const buildModalForm = document.querySelector("[data-build-modal-form]");
@@ -141,7 +155,7 @@ if (siteNav) {
 
   const dropdownControlByPath = {
     "/capabilities": "nav-capabilities-panel",
-    "/parts": "nav-parts-panel",
+    "/store": "nav-store-panel",
     "/shop-work": "nav-work-panel",
   };
   const activeDropdownTrigger = dropdownControlByPath[currentPath]
@@ -360,6 +374,28 @@ const defaultProductData = [
     parts: ["Prototypes", "One-off metalwork", "Laser cut parts", "Custom assemblies", "Specialty material work"],
   },
 ];
+
+const ecommerceProducts = Array.isArray(window.ADK_PRODUCTS) && window.ADK_PRODUCTS.length
+  ? window.ADK_PRODUCTS
+  : defaultProductData.map((product, index) => ({
+      id: product.id,
+      slug: product.id,
+      name: product.title,
+      category: product.label,
+      shortDescription: product.copy,
+      description: product.copy,
+      images: [product.image],
+      price: index % 2 === 0 ? 625 + index * 180 : null,
+      requestPricing: index % 2 !== 0,
+      status: index % 2 === 0 ? "Built to Order" : "Request Pricing",
+      inventory: index % 2 === 0 ? 2 + index : 0,
+      fitment: product.fitment,
+      material: product.material,
+      leadTime: index % 2 === 0 ? "3-5 weeks" : "Quote required",
+      buildNotes: product.caption,
+      specifications: product.parts || [],
+      featured: index < 3,
+    }));
 
 const defaultGalleryData = [
   {
@@ -754,6 +790,303 @@ document.querySelector("[data-admin-reset-gallery]")?.addEventListener("click", 
 });
 
 renderAdminLists();
+
+const cartKey = "adk.store.cart";
+
+function formatPrice(value) {
+  return typeof value === "number" ? `$${value.toLocaleString()}` : "Request Pricing";
+}
+
+function getCart() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(cartKey) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function setCart(cart) {
+  window.localStorage.setItem(cartKey, JSON.stringify(cart));
+  updateCartCount();
+}
+
+function updateCartCount() {
+  const count = getCart().reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+  document.querySelectorAll("[data-cart-count]").forEach((node) => {
+    node.textContent = String(count);
+  });
+}
+
+function productCard(product, compact = false) {
+  const canBuy = !product.requestPricing && typeof product.price === "number" && product.inventory > 0;
+  return `
+    <article class="store-card ${compact ? "store-card--compact" : ""}" data-category="${escapeHtml(product.category)}" data-product-id="${escapeHtml(product.id)}">
+      <a class="store-card__image" href="/store/${escapeHtml(product.slug)}">
+        <img loading="lazy" src="${escapeHtml(product.images?.[0] || "")}" alt="${escapeHtml(product.name)}" />
+        <span>${escapeHtml(product.status)}</span>
+      </a>
+      <div class="store-card__body">
+        <p class="eyebrow">${escapeHtml(product.category)}</p>
+        <h3><a href="/store/${escapeHtml(product.slug)}">${escapeHtml(product.name)}</a></h3>
+        <p>${escapeHtml(product.shortDescription)}</p>
+        <dl class="store-card__specs">
+          <div><dt>Fitment</dt><dd>${escapeHtml(product.fitment)}</dd></div>
+          <div><dt>Material</dt><dd>${escapeHtml(product.material)}</dd></div>
+          <div><dt>Lead Time</dt><dd>${escapeHtml(product.leadTime)}</dd></div>
+          <div><dt>Price</dt><dd>${formatPrice(product.price)}</dd></div>
+        </dl>
+        <div class="store-card__actions">
+          <a class="text-link" href="/store/${escapeHtml(product.slug)}">View Product</a>
+          ${
+            canBuy
+              ? `<button class="button line-button" type="button" data-add-cart="${escapeHtml(product.id)}">Add To Cart</button>`
+              : `<a class="button line-button" href="/build-request">Request Quote</a>`
+          }
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function getFilteredProducts() {
+  const search = document.querySelector("[data-store-search]")?.value?.toLowerCase().trim() || "";
+  const category = document.querySelector("[data-store-categories] button[aria-selected='true']")?.dataset.category || "All";
+  const activeChip = document.querySelector("[data-store-filters] button[aria-pressed='true']")?.dataset.filter || "All";
+  let products = ecommerceProducts.filter((product) => {
+    const haystack = `${product.name} ${product.category} ${product.shortDescription} ${product.fitment} ${product.material} ${product.status}`.toLowerCase();
+    const matchesSearch = !search || haystack.includes(search);
+    const matchesCategory = category === "All" || product.category === category;
+    const matchesChip =
+      activeChip === "All" ||
+      product.status === activeChip ||
+      product.category.includes(activeChip) ||
+      product.fitment.includes(activeChip);
+    return matchesSearch && matchesCategory && matchesChip;
+  });
+  const sort = document.querySelector("[data-store-sort]")?.value || "Featured";
+  if (sort === "Price: Low to High") products = products.sort((a, b) => (a.price ?? 999999) - (b.price ?? 999999));
+  if (sort === "Price: High to Low") products = products.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
+  if (sort === "Newest") products = products.slice().reverse();
+  if (sort === "Featured") products = products.sort((a, b) => Number(b.featured) - Number(a.featured));
+  return products;
+}
+
+function renderStore() {
+  const grid = document.querySelector("[data-store-grid]");
+  if (!grid) return;
+  const categories = ["All", ...new Set(ecommerceProducts.map((product) => product.category)), "Merch / Accessories"];
+  const chips = ["All", "In Stock", "Built to Order", "Request Pricing", "Air Ride", "Overland", "Trailer", "Peterbilt"];
+  const categoryWrap = document.querySelector("[data-store-categories]");
+  const filterWrap = document.querySelector("[data-store-filters]");
+  if (categoryWrap && !categoryWrap.children.length) {
+    categoryWrap.innerHTML = categories
+      .map((category, index) => `<button type="button" aria-selected="${index === 0}" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`)
+      .join("");
+  }
+  if (filterWrap && !filterWrap.children.length) {
+    filterWrap.innerHTML = chips
+      .map((chip, index) => `<button type="button" aria-pressed="${index === 0}" data-filter="${escapeHtml(chip)}">${escapeHtml(chip)}</button>`)
+      .join("");
+  }
+  const products = getFilteredProducts();
+  grid.innerHTML = products.length
+    ? products.map((product) => productCard(product)).join("")
+    : `<div class="store-empty"><p class="eyebrow">No Match</p><h2>No products match that filter.</h2><p>Try a different search, or send ADK a build request for custom work.</p><a class="button line-button" href="/build-request">Request A Build</a></div>`;
+}
+
+document.querySelector("[data-store-search]")?.addEventListener("input", renderStore);
+document.querySelector("[data-store-sort]")?.addEventListener("change", renderStore);
+document.querySelector("[data-store-categories]")?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-category]");
+  if (!button) return;
+  event.currentTarget.querySelectorAll("button").forEach((item) => item.setAttribute("aria-selected", String(item === button)));
+  renderStore();
+});
+document.querySelector("[data-store-filters]")?.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-filter]");
+  if (!button) return;
+  event.currentTarget.querySelectorAll("button").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+  renderStore();
+});
+
+document.addEventListener("click", (event) => {
+  const addButton = event.target.closest("[data-add-cart], [data-detail-primary]");
+  if (!addButton) return;
+  const product = ecommerceProducts.find((item) => item.id === addButton.dataset.addCart || item.id === addButton.dataset.productId);
+  if (!product) return;
+  if (product.requestPricing || typeof product.price !== "number") {
+    window.location.href = "/build-request";
+    return;
+  }
+  const quantity = Number(document.querySelector("[data-detail-qty]")?.value || 1);
+  const cart = getCart();
+  const existing = cart.find((item) => item.id === product.id);
+  if (existing) existing.quantity += quantity;
+  else cart.push({ id: product.id, quantity });
+  setCart(cart);
+  addButton.textContent = "Added";
+  window.setTimeout(() => (addButton.textContent = "Add To Cart"), 900);
+});
+
+function renderProductDetail() {
+  const detail = document.querySelector("[data-product-detail]");
+  if (!detail) return;
+  const slug = detail.dataset.productSlug || window.location.pathname.split("/").filter(Boolean).pop();
+  const product = ecommerceProducts.find((item) => item.slug === slug);
+  if (!product) return;
+  const primary = detail.querySelector("[data-detail-primary]");
+  detail.querySelector("[data-detail-image]").src = product.images[0];
+  detail.querySelector("[data-detail-image]").alt = product.name;
+  detail.querySelector("[data-detail-category]").textContent = product.category;
+  detail.querySelector("[data-detail-name]").textContent = product.name;
+  detail.querySelector("[data-detail-description]").textContent = product.description;
+  detail.querySelector("[data-detail-price]").textContent = formatPrice(product.price);
+  detail.querySelector("[data-detail-status]").textContent = product.status;
+  detail.querySelector("[data-detail-fitment]").textContent = product.fitment;
+  detail.querySelector("[data-detail-material]").textContent = product.material;
+  detail.querySelector("[data-detail-fitment-text]").textContent = product.fitment;
+  detail.querySelector("[data-detail-material-text]").textContent = product.material;
+  detail.querySelector("[data-detail-lead]").textContent = product.leadTime;
+  detail.querySelector("[data-detail-notes]").textContent = product.buildNotes;
+  detail.querySelector("[data-detail-specs]").innerHTML = (product.specifications || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  detail.querySelector("[data-detail-thumbs]").innerHTML = (product.images || [])
+    .map((image) => `<button type="button"><img src="${escapeHtml(image)}" alt="${escapeHtml(product.name)} thumbnail" /></button>`)
+    .join("");
+  primary.dataset.productId = product.id;
+  primary.textContent = product.requestPricing ? "Request Quote" : "Add To Cart";
+  detail.querySelector("[data-detail-thumbs]")?.addEventListener("click", (event) => {
+    const img = event.target.closest("img");
+    if (img) detail.querySelector("[data-detail-image]").src = img.src;
+  });
+  const related = document.querySelector("[data-related-products]");
+  if (related) {
+    related.innerHTML = ecommerceProducts
+      .filter((item) => item.id !== product.id && item.category === product.category)
+      .slice(0, 3)
+      .map((item) => productCard(item, true))
+      .join("");
+  }
+}
+
+function renderCart() {
+  const cartItems = document.querySelector("[data-cart-items]");
+  if (!cartItems) return;
+  const cart = getCart();
+  const rows = cart.map((item) => ({ ...item, product: ecommerceProducts.find((product) => product.id === item.id) })).filter((item) => item.product);
+  const subtotal = rows.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  cartItems.innerHTML = rows.length
+    ? rows
+        .map(
+          (item) => `
+          <article class="cart-row">
+            <img src="${escapeHtml(item.product.images[0])}" alt="${escapeHtml(item.product.name)}" />
+            <div><h2>${escapeHtml(item.product.name)}</h2><p>${escapeHtml(item.product.category)} · ${formatPrice(item.product.price)}</p></div>
+            <label>Qty<input type="number" min="1" value="${item.quantity}" data-cart-qty="${escapeHtml(item.id)}" /></label>
+            <strong>${formatPrice(item.product.price * item.quantity)}</strong>
+            <button type="button" data-cart-remove="${escapeHtml(item.id)}">Remove</button>
+          </article>
+        `,
+        )
+        .join("")
+    : `<div class="store-empty"><p class="eyebrow">Cart Empty</p><h2>No fixed-price products are in the cart.</h2><p>Request-pricing products move through the quote flow.</p><a class="button line-button" href="/store">Shop ADK</a></div>`;
+  document.querySelector("[data-cart-subtotal]").textContent = formatPrice(subtotal);
+}
+
+document.querySelector("[data-cart-items]")?.addEventListener("input", (event) => {
+  const input = event.target.closest("[data-cart-qty]");
+  if (!input) return;
+  const cart = getCart().map((item) => (item.id === input.dataset.cartQty ? { ...item, quantity: Math.max(1, Number(input.value || 1)) } : item));
+  setCart(cart);
+  renderCart();
+});
+document.querySelector("[data-cart-items]")?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-cart-remove]");
+  if (!button) return;
+  setCart(getCart().filter((item) => item.id !== button.dataset.cartRemove));
+  renderCart();
+});
+
+function renderAdminData() {
+  document.querySelectorAll("[data-admin-total-products]").forEach((node) => (node.textContent = String(ecommerceProducts.length)));
+  const table = document.querySelector("[data-admin-products-table]");
+  if (table) {
+    table.innerHTML = `<div class="admin-table__head"><span>Image</span><span>Name</span><span>Category</span><span>Price</span><span>Status</span><span>Inventory</span><span>Action</span></div>${ecommerceProducts
+      .map(
+        (product) => `<div class="admin-table__row"><img src="${escapeHtml(product.images[0])}" alt="" /><span>${escapeHtml(product.name)}</span><span>${escapeHtml(product.category)}</span><span>${formatPrice(product.price)}</span><span>${escapeHtml(product.status)}</span><span>${product.inventory}</span><a href="/admin/products/[id]">Edit</a></div>`,
+      )
+      .join("")}`;
+  }
+}
+
+function setupAdminLoginCanvas() {
+  const canvas = document.querySelector("[data-admin-login-canvas]");
+  if (!canvas) return;
+  const context = canvas.getContext("2d");
+  let frame = 0;
+  function draw() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    context.scale(dpr, dpr);
+    context.clearRect(0, 0, rect.width, rect.height);
+    context.fillStyle = "rgba(244,241,234,0.92)";
+    context.fillRect(0, 0, rect.width, rect.height);
+    const points = [];
+    for (let x = 28; x < rect.width; x += 34) {
+      for (let y = 28; y < rect.height; y += 34) points.push([x, y]);
+    }
+    context.fillStyle = "rgba(31,95,122,0.25)";
+    points.forEach(([x, y], index) => {
+      context.beginPath();
+      context.arc(x, y, index % 9 === frame % 9 ? 2.2 : 1.15, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.strokeStyle = "rgba(47,141,170,0.62)";
+    context.lineWidth = 1.2;
+    context.beginPath();
+    const path = points.filter((_, index) => index % 17 === (frame % 17)).slice(0, 9);
+    path.forEach(([x, y], index) => (index ? context.lineTo(x, y) : context.moveTo(x, y)));
+    context.stroke();
+    context.fillStyle = "rgba(216,138,40,0.78)";
+    path.forEach(([x, y]) => {
+      context.beginPath();
+      context.arc(x, y, 2.8, 0, Math.PI * 2);
+      context.fill();
+    });
+    frame += 1;
+    if (!prefersReducedMotion) window.setTimeout(() => window.requestAnimationFrame(draw), 180);
+  }
+  draw();
+}
+
+document.querySelector("[data-toggle-password]")?.addEventListener("click", (event) => {
+  const input = document.querySelector("[data-admin-password]");
+  if (!input) return;
+  input.type = input.type === "password" ? "text" : "password";
+  event.currentTarget.textContent = input.type === "password" ? "Show" : "Hide";
+});
+
+document.querySelector("[data-admin-login-form]")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const note = document.querySelector("[data-admin-login-note]");
+  note.textContent = "Signing in with development mock auth...";
+  window.localStorage.setItem("adk.admin.session", JSON.stringify({ signedInAt: new Date().toISOString() }));
+  window.setTimeout(() => window.location.assign("/admin"), prefersReducedMotion ? 0 : 500);
+});
+
+document.querySelector("[data-admin-logout]")?.addEventListener("click", () => {
+  window.localStorage.removeItem("adk.admin.session");
+  window.location.assign("/admin/login");
+});
+
+renderStore();
+renderProductDetail();
+renderCart();
+renderAdminData();
+setupAdminLoginCanvas();
+updateCartCount();
 
 const buildForm = document.querySelector(".build-form");
 const formNote = document.querySelector(".form-note");

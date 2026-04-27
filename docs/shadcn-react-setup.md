@@ -12,6 +12,7 @@ The requested React files have been placed in the conventional shadcn path:
 - Expandable hero button demo entry: `/components/hero-button-demo.tsx`
 - Footer demo entry: `/components/footer-7-demo.tsx`
 - Spatial product showcase demo entry: `/components/spatial-product-showcase-demo.tsx`
+- ADK admin sign-in demo entry: `/components/adk-admin-signin-demo.tsx`
 
 Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
 
@@ -33,6 +34,7 @@ The current static site stylesheet is `/styles.css`. In a shadcn React app, the 
 - Added interactive component: `hero-button-expendable`
 - Added footer component: `footer-7`
 - Added product showcase component: `spatial-product-showcase`
+- Added admin component: `adk-admin-signin`
 - Added animation/shader dependencies for future React use: `framer-motion` and `@paper-design/shaders-react`
 - Added icon dependency for footer/social components: `react-icons`
 - The live static site uses `/styles.css`; the provided Tailwind theme snippet should be applied later to the actual Tailwind global stylesheet after the project is migrated.
@@ -89,3 +91,4 @@ Make sure `tsconfig.json` includes the alias expected by the copied files:
 - Which image source should power the header/demo pages: local ADK assets, ImageGen outputs, or stock placeholders?
 - Should responsive behavior match the current static ADK navigation or replace it completely?
 - The provided navbar currently uses remote logo/image props and lucide icons. No Unsplash assets are required until it is adapted into a real ADK page.
+- The ADK admin sign-in component uses a development-only mock submit handler. Replace it with real server-side authentication, environment-backed secrets, and secure sessions before production admin use.
