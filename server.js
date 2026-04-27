@@ -1,4 +1,5 @@
 const http = require("http");
+const { execFile } = require("child_process");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
@@ -101,6 +102,45 @@ function readRequestBody(request) {
   });
 }
 
+function runCommand(command, args) {
+  return new Promise((resolve, reject) => {
+    execFile(command, args, { cwd: root, timeout: 1000 * 60 * 5 }, (error, stdout, stderr) => {
+      const result = {
+        command: [command, ...args].join(" "),
+        stdout: stdout.trim(),
+        stderr: stderr.trim(),
+      };
+
+      if (error) {
+        reject(Object.assign(error, result));
+        return;
+      }
+
+      resolve(result);
+    });
+  });
+}
+
+async function publishSite() {
+  const steps = [];
+  const status = await runCommand("git", ["status", "--porcelain"]);
+  steps.push({ name: "Check Git status", ok: true, output: status.stdout || "Working tree clean." });
+
+  if (status.stdout.trim()) {
+    steps.push({ name: "Stage changes", ok: true, output: (await runCommand("git", ["add", "-A"])).stdout || "Changes staged." });
+    const commit = await runCommand("git", ["commit", "-m", "Publish ADK admin changes"]);
+    steps.push({ name: "Commit changes", ok: true, output: commit.stdout || "Commit created." });
+    const push = await runCommand("git", ["push", "origin", "main"]);
+    steps.push({ name: "Push to GitHub", ok: true, output: push.stdout || push.stderr || "Pushed to GitHub." });
+  } else {
+    steps.push({ name: "Push to GitHub", ok: true, output: "No local changes to commit. GitHub already matches this checkout." });
+  }
+
+  const deploy = await runCommand("railway", ["up", "--service", "ADK", "--detach"]);
+  steps.push({ name: "Deploy to Railway", ok: true, output: deploy.stdout || deploy.stderr || "Railway deploy started." });
+  return steps;
+}
+
 const server = http.createServer((request, response) => {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   const pathname = decodeURIComponent(requestUrl.pathname);
@@ -114,6 +154,25 @@ const server = http.createServer((request, response) => {
     sendJson(response, 200, { ok: true }, {
       "Set-Cookie": `${sessionCookieName}=; ${cookieOptions(request, 0)}`,
     });
+    return;
+  }
+
+  if (pathname === "/api/admin/publish" && request.method === "POST") {
+    if (!isAdminAuthenticated(request)) {
+      sendJson(response, 401, { ok: false, message: "Admin authentication required." });
+      return;
+    }
+
+    publishSite()
+      .then((steps) => sendJson(response, 200, { ok: true, message: "Publish started.", steps }))
+      .catch((error) => {
+        sendJson(response, 500, {
+          ok: false,
+          message: "Publish failed. This server needs Git, Railway CLI, and deploy credentials available.",
+          command: error.command,
+          output: error.stderr || error.stdout || error.message,
+        });
+      });
     return;
   }
 

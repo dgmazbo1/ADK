@@ -8,6 +8,17 @@ const siteNav = document.querySelector(".site-nav");
 const headerContact = document.querySelector(".header-contact");
 const navDropdowns = document.querySelectorAll("[data-nav-dropdown]");
 
+if (isAdminRoute && !isAdminLoginRoute) {
+  const topbar = document.querySelector(".admin-topbar");
+  topbar?.insertAdjacentHTML(
+    "beforeend",
+    `<div class="admin-publish">
+      <button class="button line-button" type="button" data-admin-publish>Publish</button>
+      <p data-admin-publish-status>Push current website changes to GitHub and start a Railway deploy.</p>
+    </div>`,
+  );
+}
+
 if (!isAdminRoute) {
   document.body.insertAdjacentHTML(
     "beforeend",
@@ -1046,6 +1057,31 @@ document.querySelector("[data-admin-login-form]")?.addEventListener("submit", (e
 
 document.querySelector("[data-admin-logout]")?.addEventListener("click", () => {
   fetch("/api/admin/logout", { method: "POST" }).finally(() => window.location.assign("/admin/login"));
+});
+
+document.querySelector("[data-admin-publish]")?.addEventListener("click", (event) => {
+  const button = event.currentTarget;
+  const status = document.querySelector("[data-admin-publish-status]");
+  button.disabled = true;
+  button.textContent = "Publishing";
+  status.textContent = "Checking Git status, pushing to GitHub, then starting Railway deploy...";
+
+  fetch("/api/admin/publish", { method: "POST" })
+    .then(async (response) => {
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) throw new Error(data.message || "Publish failed.");
+      const summary = Array.isArray(data.steps)
+        ? data.steps.map((step) => `${step.name}: ${step.output}`).join(" ")
+        : data.message;
+      status.textContent = summary;
+    })
+    .catch((error) => {
+      status.textContent = error.message;
+    })
+    .finally(() => {
+      button.disabled = false;
+      button.textContent = "Publish";
+    });
 });
 
 renderStore();

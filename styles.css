@@ -2892,6 +2892,30 @@ select:focus {
   font-weight: 400;
 }
 
+.admin-publish {
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+  max-width: 24rem;
+  margin-left: auto;
+}
+
+.admin-publish .button {
+  min-width: 132px;
+}
+
+.admin-publish .button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.admin-publish p {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
 .admin-stat-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3954,8 +3978,19 @@ select:focus {
   .detail-specs,
   .cart-row,
   .admin-topbar,
+  .admin-publish,
   .admin-placeholder-table {
     grid-template-columns: 1fr;
+  }
+
+  .admin-publish {
+    justify-items: stretch;
+    max-width: none;
+    width: 100%;
+  }
+
+  .admin-publish p {
+    text-align: left;
   }
 
   .store-grid {
