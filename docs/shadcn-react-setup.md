@@ -11,6 +11,7 @@ The requested React files have been placed in the conventional shadcn path:
 - Feature spotlight demo entry: `/components/feature-spotlight-demo.tsx`
 - Expandable hero button demo entry: `/components/hero-button-demo.tsx`
 - Footer demo entry: `/components/footer-7-demo.tsx`
+- Spatial product showcase demo entry: `/components/spatial-product-showcase-demo.tsx`
 
 Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
 
@@ -31,6 +32,7 @@ The current static site stylesheet is `/styles.css`. In a shadcn React app, the 
 - Added feature component: `feature-spotlight`
 - Added interactive component: `hero-button-expendable`
 - Added footer component: `footer-7`
+- Added product showcase component: `spatial-product-showcase`
 - Added animation/shader dependencies for future React use: `framer-motion` and `@paper-design/shaders-react`
 - Added icon dependency for footer/social components: `react-icons`
 - The live static site uses `/styles.css`; the provided Tailwind theme snippet should be applied later to the actual Tailwind global stylesheet after the project is migrated.

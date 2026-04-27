@@ -257,8 +257,14 @@ if (indexList) {
   window.addEventListener("resize", () => rows[0] && setActiveRow(rows[0]), { passive: true });
 }
 
-const productData = {
-  "air-ride": {
+const storageKeys = {
+  products: "adk.store.products",
+  gallery: "adk.store.gallery",
+};
+
+const defaultProductData = [
+  {
+    id: "air-ride",
     label: "Air Ride Systems",
     title: "Peterbilt Air Ride Programs",
     copy: "ADK builds air ride kits and suspension support around fitment, load, routing, and long-term service access.",
@@ -278,7 +284,8 @@ const productData = {
       "Peterbilt 359/379/389 Gen III Air Ride Kit",
     ],
   },
-  mounts: {
+  {
+    id: "mounts",
     label: "Mounts + Brackets",
     title: "Custom Brackets And Fitment Hardware",
     copy: "Mounting hardware built around the actual install point, not a generic shelf part.",
@@ -292,7 +299,8 @@ const productData = {
     caption: "Mounting hardware / shop fitment",
     parts: ["Custom brackets", "Mounts", "Overland mounts", "Tank mounts", "One-off fitment hardware"],
   },
-  tanks: {
+  {
+    id: "tanks",
     label: "Tanks + Cooling",
     title: "Cooling And Tank Products",
     copy: "Fabricated tanks, cooling support, and related assemblies built around space, serviceability, and material choice.",
@@ -306,7 +314,8 @@ const productData = {
     caption: "Cooling / tank product study",
     parts: ["Cooling products", "Tank products", "Aluminum fabrication", "Stainless fabrication", "Custom reservoirs"],
   },
-  trailers: {
+  {
+    id: "trailers",
     label: "Trailer Components",
     title: "Repair And Reinforcement Components",
     copy: "Trailer repair support for frames, hitches, cross members, reinforcements, and structural welding.",
@@ -320,7 +329,8 @@ const productData = {
     caption: "Trailer repair / reinforcement",
     parts: ["Frame repair", "Cross-member replacement", "Hitch repair", "Reinforcement plates", "Structural welding"],
   },
-  overland: {
+  {
+    id: "overland",
     label: "Overland Parts",
     title: "Field-Ready Accessories And Mounting",
     copy: "Overland accessories, utility mounts, tank support, brackets, and practical hardware made to fit the vehicle.",
@@ -334,7 +344,8 @@ const productData = {
     caption: "Overland component planning",
     parts: ["Overland mounts", "Accessory brackets", "Storage support", "Tank mounts", "Field-use hardware"],
   },
-  oneoff: {
+  {
+    id: "oneoff",
     label: "One-Off Fabrication",
     title: "Custom Parts From Idea To Metal",
     copy: "When the part does not exist, ADK can measure, model, cut, weld, test fit, and finish the solution.",
@@ -348,51 +359,160 @@ const productData = {
     caption: "CAD to metal / one-off fabrication",
     parts: ["Prototypes", "One-off metalwork", "Laser cut parts", "Custom assemblies", "Specialty material work"],
   },
-};
+];
 
-const productTabs = document.querySelectorAll("[data-product]");
-const productImage = document.querySelector("[data-product-image]");
-const productCaption = document.querySelector("[data-product-caption]");
-const productLabel = document.querySelector("[data-product-label]");
-const productTitle = document.querySelector("[data-product-title]");
-const productCopy = document.querySelector("[data-product-copy]");
-const partList = document.querySelector(".part-list");
+const defaultGalleryData = [
+  {
+    id: "weld-detail",
+    category: "weld",
+    size: "span-2",
+    title: "TIG Weld Detail",
+    note: "Controlled heat / shop finish",
+    image:
+      "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/hero-welding-v2-Dwy2UyuPXnV2BT8WswKmAm.webp",
+    alt: "Welder creating controlled sparks in a fabrication shop",
+  },
+  {
+    id: "cad-to-metal",
+    category: "cad",
+    size: "",
+    title: "CAD To Metal",
+    note: "Cut profiles / brackets",
+    image:
+      "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/laser-cutting-user_be584be4.jpg",
+    alt: "Laser cut metal component detail",
+  },
+  {
+    id: "trailer-repair",
+    category: "repair",
+    size: "tall",
+    title: "Trailer Repair",
+    note: "Structural reinforcement",
+    image:
+      "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/trailer-repair-user_a0ea39bf.jpg",
+    alt: "Trailer repair and structural fabrication work",
+  },
+  {
+    id: "air-ride-component",
+    category: "truck",
+    size: "",
+    title: "Air Ride Component",
+    note: "Steel / Peterbilt fitment",
+    image:
+      "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/air-ride-user_6d45a40e.jpg",
+    alt: "Air ride suspension fabrication components",
+  },
+  {
+    id: "tank-product",
+    category: "tank",
+    size: "",
+    title: "Tank Product",
+    note: "Aluminum / shop-built",
+    image:
+      "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/coolant-tank-v1_c26f55db.png",
+    alt: "Custom fabricated cooling tank component",
+  },
+  {
+    id: "overland-finished",
+    category: "overland",
+    size: "wide",
+    title: "Overland / Finished Parts",
+    note: "Measure / mockup / build",
+    image:
+      "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/fabrication-shop-v2-2JfevkRadwYjNzsMAGApkz.webp",
+    alt: "Fabrication shop floor with work tables and metalworking equipment",
+  },
+];
 
-function setProduct(key) {
-  const product = productData[key];
-  if (!product) return;
-
-  productTabs.forEach((tab) => {
-    tab.setAttribute("aria-selected", String(tab.dataset.product === key));
+function escapeHtml(value = "") {
+  return String(value).replace(/[&<>"']/g, (character) => {
+    const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+    return entities[character];
   });
-
-  productImage?.classList.add("is-changing");
-
-  window.setTimeout(() => {
-    if (productImage) {
-      productImage.src = product.image;
-      productImage.alt = product.alt;
-      productImage.classList.remove("is-changing");
-    }
-    if (productCaption) productCaption.textContent = product.caption;
-    if (productLabel) productLabel.textContent = product.label;
-    if (productTitle) productTitle.textContent = product.title;
-    if (productCopy) productCopy.textContent = product.copy;
-
-    document.querySelector("[data-fitment]").textContent = product.fitment;
-    document.querySelector("[data-product-material]").textContent = product.material;
-    document.querySelector("[data-use]").textContent = product.use;
-    document.querySelector("[data-status]").textContent = product.status;
-
-    if (partList) {
-      partList.innerHTML = product.parts.map((part) => `<span>${part}</span>`).join("");
-    }
-  }, prefersReducedMotion ? 0 : 160);
 }
 
-productTabs.forEach((tab) => {
-  tab.addEventListener("click", () => setProduct(tab.dataset.product));
-});
+function readStoredList(key, fallback) {
+  try {
+    const stored = window.localStorage.getItem(key);
+    if (!stored) return fallback;
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) && parsed.length ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStoredList(key, list) {
+  window.localStorage.setItem(key, JSON.stringify(list));
+}
+
+function getProducts() {
+  return readStoredList(storageKeys.products, defaultProductData);
+}
+
+function getGalleryItems() {
+  return readStoredList(storageKeys.gallery, defaultGalleryData);
+}
+
+function renderSpatialStore(activeId) {
+  const switcher = document.querySelector("[data-store-switcher]");
+  const products = getProducts();
+  if (!switcher || !products.length) return;
+
+  const activeProduct = products.find((product) => product.id === activeId) || products[0];
+  const image = document.querySelector("[data-store-image]");
+  const status = document.querySelector("[data-store-status]");
+  const label = document.querySelector("[data-store-label]");
+  const title = document.querySelector("[data-store-title]");
+  const copy = document.querySelector("[data-store-copy]");
+  const fitment = document.querySelector("[data-store-fitment]");
+  const material = document.querySelector("[data-store-material]");
+  const use = document.querySelector("[data-store-use]");
+  const readiness = document.querySelector("[data-store-readiness]");
+  const parts = document.querySelector("[data-store-products]");
+
+  document.querySelector("[data-spatial-store]")?.style.setProperty("--store-accent", activeProduct.accent || "#315e74");
+
+  if (image) {
+    image.classList.add("is-changing");
+    window.setTimeout(() => {
+      image.src = activeProduct.image;
+      image.alt = activeProduct.alt || activeProduct.title;
+      image.classList.remove("is-changing");
+    }, prefersReducedMotion ? 0 : 120);
+  }
+
+  if (status) status.textContent = activeProduct.status || "Request pricing";
+  if (label) label.textContent = activeProduct.label;
+  if (title) title.textContent = activeProduct.title;
+  if (copy) copy.textContent = activeProduct.copy;
+  if (fitment) fitment.textContent = activeProduct.fitment;
+  if (material) material.textContent = activeProduct.material;
+  if (use) use.textContent = activeProduct.use;
+  if (readiness) readiness.textContent = activeProduct.status || "Request pricing";
+  if (parts) {
+    parts.innerHTML = (activeProduct.parts || [])
+      .map((part) => `<span>${escapeHtml(part)}</span>`)
+      .join("");
+  }
+
+  switcher.innerHTML = products
+    .map(
+      (product) => `
+        <button type="button" role="tab" aria-selected="${product.id === activeProduct.id}" data-store-product="${escapeHtml(product.id)}">
+          <span>${escapeHtml(product.label)}</span>
+          <small>${escapeHtml(product.status || "Request pricing")}</small>
+        </button>
+      `,
+    )
+    .join("");
+
+  switcher.querySelectorAll("[data-store-product]").forEach((button) => {
+    button.addEventListener("click", () => renderSpatialStore(button.dataset.storeProduct));
+  });
+}
+
+renderSpatialStore();
 
 const materialData = {
   steel: {
@@ -464,22 +584,176 @@ materialTabs.forEach((tab) => {
   tab.addEventListener("click", () => setMaterial(tab.dataset.material));
 });
 
+function renderGallery(activeFilter = "all") {
+  const galleryGrid = document.querySelector("[data-gallery-grid]");
+  if (!galleryGrid) return;
+
+  galleryGrid.innerHTML = getGalleryItems()
+    .map(
+      (item) => `
+        <figure class="${escapeHtml(item.size || "")} reveal is-visible" data-category="${escapeHtml(item.category || "weld")}">
+          <img loading="lazy" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title)}" />
+          <figcaption><span>${escapeHtml(item.title)}</span><small>${escapeHtml(item.note || "")}</small></figcaption>
+        </figure>
+      `,
+    )
+    .join("");
+
+  filterGallery(activeFilter);
+}
+
+function filterGallery(activeFilter) {
+  const portfolioItems = document.querySelectorAll(".masonry [data-category]");
+  portfolioItems.forEach((item) => {
+    const shouldShow = activeFilter === "all" || item.dataset.category === activeFilter;
+    item.classList.toggle("is-hidden", !shouldShow);
+  });
+}
+
 const filters = document.querySelectorAll("[data-filter]");
-const portfolioItems = document.querySelectorAll(".masonry [data-category]");
 
 filters.forEach((button) => {
   button.addEventListener("click", () => {
-    const filter = button.dataset.filter;
+    const filter = button.dataset.filter || "all";
     filters.forEach((filterButton) => {
       filterButton.setAttribute("aria-pressed", String(filterButton === button));
     });
-
-    portfolioItems.forEach((item) => {
-      const shouldShow = filter === "all" || item.dataset.category === filter;
-      item.classList.toggle("is-hidden", !shouldShow);
-    });
+    filterGallery(filter);
   });
 });
+
+renderGallery();
+
+function createId(prefix, title) {
+  const slug = String(title || "item")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 42);
+  return `${prefix}-${slug || "item"}-${Date.now().toString(36)}`;
+}
+
+function renderAdminLists() {
+  const productList = document.querySelector("[data-admin-products-list]");
+  const galleryList = document.querySelector("[data-admin-gallery-list]");
+
+  if (productList) {
+    productList.innerHTML = getProducts()
+      .map(
+        (product) => `
+          <div class="admin-list__row">
+            <img src="${escapeHtml(product.image)}" alt="" loading="lazy" />
+            <div>
+              <strong>${escapeHtml(product.title)}</strong>
+              <span>${escapeHtml(product.label)} · ${escapeHtml(product.status || "Request pricing")}</span>
+            </div>
+            <button type="button" data-remove-product="${escapeHtml(product.id)}">Remove</button>
+          </div>
+        `,
+      )
+      .join("");
+
+    productList.querySelectorAll("[data-remove-product]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextProducts = getProducts().filter((product) => product.id !== button.dataset.removeProduct);
+        writeStoredList(storageKeys.products, nextProducts.length ? nextProducts : defaultProductData);
+        renderAdminLists();
+        renderSpatialStore();
+      });
+    });
+  }
+
+  if (galleryList) {
+    galleryList.innerHTML = getGalleryItems()
+      .map(
+        (item) => `
+          <div class="admin-list__row">
+            <img src="${escapeHtml(item.image)}" alt="" loading="lazy" />
+            <div>
+              <strong>${escapeHtml(item.title)}</strong>
+              <span>${escapeHtml(item.category)} · ${escapeHtml(item.note || "")}</span>
+            </div>
+            <button type="button" data-remove-gallery="${escapeHtml(item.id)}">Remove</button>
+          </div>
+        `,
+      )
+      .join("");
+
+    galleryList.querySelectorAll("[data-remove-gallery]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextGallery = getGalleryItems().filter((item) => item.id !== button.dataset.removeGallery);
+        writeStoredList(storageKeys.gallery, nextGallery.length ? nextGallery : defaultGalleryData);
+        renderAdminLists();
+        renderGallery();
+      });
+    });
+  }
+}
+
+const adminProductForm = document.querySelector("[data-admin-product-form]");
+const adminGalleryForm = document.querySelector("[data-admin-gallery-form]");
+
+adminProductForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(adminProductForm);
+  const title = formData.get("title");
+  const product = {
+    id: createId("part", title),
+    label: String(formData.get("label") || "").trim(),
+    title: String(title || "").trim(),
+    copy: String(formData.get("copy") || "").trim(),
+    fitment: String(formData.get("fitment") || "Custom / review required").trim(),
+    material: String(formData.get("material") || "Shop-selected material").trim(),
+    use: String(formData.get("use") || "Fitment, function, and real use").trim(),
+    status: String(formData.get("status") || "Request pricing").trim(),
+    image: String(formData.get("image") || "").trim(),
+    alt: String(formData.get("alt") || title || "ADK fabricated part").trim(),
+    caption: String(title || "ADK product").trim(),
+    parts: String(formData.get("parts") || "")
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean),
+  };
+
+  writeStoredList(storageKeys.products, [...getProducts(), product]);
+  adminProductForm.reset();
+  renderAdminLists();
+  renderSpatialStore(product.id);
+});
+
+adminGalleryForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(adminGalleryForm);
+  const title = formData.get("title");
+  const item = {
+    id: createId("gallery", title),
+    category: String(formData.get("category") || "weld"),
+    size: String(formData.get("size") || ""),
+    title: String(title || "").trim(),
+    note: String(formData.get("note") || "").trim(),
+    image: String(formData.get("image") || "").trim(),
+    alt: String(formData.get("alt") || title || "ADK shop work").trim(),
+  };
+
+  writeStoredList(storageKeys.gallery, [...getGalleryItems(), item]);
+  adminGalleryForm.reset();
+  renderAdminLists();
+  renderGallery();
+});
+
+document.querySelector("[data-admin-reset-products]")?.addEventListener("click", () => {
+  writeStoredList(storageKeys.products, defaultProductData);
+  renderAdminLists();
+  renderSpatialStore();
+});
+
+document.querySelector("[data-admin-reset-gallery]")?.addEventListener("click", () => {
+  writeStoredList(storageKeys.gallery, defaultGalleryData);
+  renderAdminLists();
+  renderGallery();
+});
+
+renderAdminLists();
 
 const buildForm = document.querySelector(".build-form");
 const formNote = document.querySelector(".form-note");
