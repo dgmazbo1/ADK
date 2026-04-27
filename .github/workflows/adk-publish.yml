@@ -1,0 +1,50 @@
+name: ADK Admin Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      requested_by:
+        description: Admin user who requested publish
+        required: false
+        default: adk-admin
+      source:
+        description: Publish source
+        required: false
+        default: admin-panel
+
+permissions:
+  contents: write
+
+env:
+  RAILWAY_PROJECT_ID: f3e9d28e-ffc1-4dd3-ad4a-4859a20eb346
+  RAILWAY_ENVIRONMENT_ID: e7c824ab-a87a-476f-a443-c89073b959c2
+  RAILWAY_SERVICE_ID: 059f1aac-262b-42ed-aa6a-7e222c6127d9
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ADK
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record admin publish in GitHub
+        run: |
+          git config user.name "ADK Admin Publisher"
+          git config user.email "actions@github.com"
+          git commit --allow-empty -m "Admin publish request"
+          git push origin HEAD:main
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Link Railway project
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+        run: railway link --project "$RAILWAY_PROJECT_ID" --environment "$RAILWAY_ENVIRONMENT_ID" --service "$RAILWAY_SERVICE_ID"
+
+      - name: Deploy ADK to Railway
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+        run: railway up --service "$RAILWAY_SERVICE_ID" --detach

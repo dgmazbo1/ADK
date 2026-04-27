@@ -1073,7 +1073,7 @@ document.querySelector("[data-admin-publish]")?.addEventListener("click", (event
       const summary = Array.isArray(data.steps)
         ? data.steps.map((step) => `${step.name}: ${step.output}`).join(" ")
         : data.message;
-      status.textContent = summary;
+      status.textContent = data.workflowUrl ? `${summary} Track it here: ${data.workflowUrl}` : summary;
     })
     .catch((error) => {
       status.textContent = error.message;

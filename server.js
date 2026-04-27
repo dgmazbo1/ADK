@@ -1,5 +1,4 @@
 const http = require("http");
-const { execFile } = require("child_process");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
@@ -9,6 +8,10 @@ const port = Number(process.env.PORT || 4173);
 const adminUsername = process.env.ADK_ADMIN_USER;
 const adminPassword = process.env.ADK_ADMIN_PASSWORD;
 const adminSessionSecret = process.env.ADK_ADMIN_SESSION_SECRET;
+const githubToken = process.env.ADK_GITHUB_TOKEN;
+const githubOwner = process.env.ADK_GITHUB_OWNER || "dgmazbo1";
+const githubRepo = process.env.ADK_GITHUB_REPO || "ADK";
+const githubWorkflow = process.env.ADK_GITHUB_PUBLISH_WORKFLOW || "adk-publish.yml";
 const sessionCookieName = "adk_admin_session";
 const sessionDurationMs = 1000 * 60 * 60 * 12;
 
@@ -102,43 +105,42 @@ function readRequestBody(request) {
   });
 }
 
-function runCommand(command, args) {
-  return new Promise((resolve, reject) => {
-    execFile(command, args, { cwd: root, timeout: 1000 * 60 * 5 }, (error, stdout, stderr) => {
-      const result = {
-        command: [command, ...args].join(" "),
-        stdout: stdout.trim(),
-        stderr: stderr.trim(),
-      };
-
-      if (error) {
-        reject(Object.assign(error, result));
-        return;
-      }
-
-      resolve(result);
-    });
-  });
-}
-
 async function publishSite() {
-  const steps = [];
-  const status = await runCommand("git", ["status", "--porcelain"]);
-  steps.push({ name: "Check Git status", ok: true, output: status.stdout || "Working tree clean." });
-
-  if (status.stdout.trim()) {
-    steps.push({ name: "Stage changes", ok: true, output: (await runCommand("git", ["add", "-A"])).stdout || "Changes staged." });
-    const commit = await runCommand("git", ["commit", "-m", "Publish ADK admin changes"]);
-    steps.push({ name: "Commit changes", ok: true, output: commit.stdout || "Commit created." });
-    const push = await runCommand("git", ["push", "origin", "main"]);
-    steps.push({ name: "Push to GitHub", ok: true, output: push.stdout || push.stderr || "Pushed to GitHub." });
-  } else {
-    steps.push({ name: "Push to GitHub", ok: true, output: "No local changes to commit. GitHub already matches this checkout." });
+  if (!githubToken) {
+    throw new Error("ADK_GITHUB_TOKEN is not configured.");
   }
 
-  const deploy = await runCommand("railway", ["up", "--service", "ADK", "--detach"]);
-  steps.push({ name: "Deploy to Railway", ok: true, output: deploy.stdout || deploy.stderr || "Railway deploy started." });
-  return steps;
+  const workflowDispatchUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/actions/workflows/${githubWorkflow}/dispatches`;
+  const response = await fetch(workflowDispatchUrl, {
+    method: "POST",
+    headers: {
+      "Accept": "application/vnd.github+json",
+      "Authorization": `Bearer ${githubToken}`,
+      "Content-Type": "application/json",
+      "User-Agent": "adk-admin-publisher",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+    body: JSON.stringify({
+      ref: "main",
+      inputs: {
+        requested_by: adminUsername || "adk-admin",
+        source: "adk-admin-panel",
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`GitHub workflow dispatch failed with ${response.status}: ${detail}`);
+  }
+
+  return [
+    {
+      name: "GitHub publish workflow",
+      ok: true,
+      output: `Workflow ${githubWorkflow} queued on ${githubOwner}/${githubRepo}. It will create a publish commit and deploy Railway from GitHub Actions.`,
+    },
+  ];
 }
 
 const server = http.createServer((request, response) => {
@@ -164,13 +166,17 @@ const server = http.createServer((request, response) => {
     }
 
     publishSite()
-      .then((steps) => sendJson(response, 200, { ok: true, message: "Publish started.", steps }))
+      .then((steps) => sendJson(response, 200, {
+        ok: true,
+        message: "Publish workflow queued.",
+        workflowUrl: `https://github.com/${githubOwner}/${githubRepo}/actions/workflows/${githubWorkflow}`,
+        steps,
+      }))
       .catch((error) => {
         sendJson(response, 500, {
           ok: false,
-          message: "Publish failed. This server needs Git, Railway CLI, and deploy credentials available.",
-          command: error.command,
-          output: error.stderr || error.stdout || error.message,
+          message: "Publish failed. Check GitHub token and workflow configuration.",
+          output: error.message,
         });
       });
     return;
