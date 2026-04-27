@@ -752,8 +752,7 @@ main {
 .product-copy > p,
 .workflow-diagram p,
 .index-list p,
-.material-table dd,
-.footer-nameplate p {
+.material-table dd {
   margin-top: 0.95rem;
   color: var(--muted);
   font-size: 0.95rem;
@@ -1651,8 +1650,7 @@ body.build-modal-open {
 .index-list h3,
 .workflow-diagram strong,
 .product-copy h3,
-.material-readout h3,
-.footer-grid h3 {
+.material-readout h3 {
   font-size: 0.98rem;
   font-weight: 700;
   line-height: 1.38;
@@ -2218,67 +2216,126 @@ select:focus {
 }
 
 .site-footer {
-  padding: 0 0 3rem;
+  padding: clamp(3.5rem, 8vw, 7rem) 0 2rem;
 }
 
-.footer-nameplate {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  align-items: center;
-  padding: 1.2rem 0;
+.footer-seven {
   border-top: 1px solid var(--line-strong);
-  border-bottom: 1px solid var(--line);
 }
 
-.footer-nameplate img {
-  width: 62px;
-  height: 62px;
+.footer-seven__container {
+  display: grid;
+  gap: 2rem;
+}
+
+.footer-seven__top {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.42fr) 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.footer-seven__brand {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.footer-seven__logo-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.72rem;
+}
+
+.footer-seven__logo-row img {
+  width: 42px;
+  height: 42px;
   object-fit: contain;
 }
 
-.footer-nameplate strong {
-  display: block;
-  margin-top: 0.2rem;
+.footer-seven__logo-row h2 {
+  margin: 0;
   font-family: var(--font-serif);
-  font-size: 1.75rem;
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
   font-weight: 400;
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr 1.15fr 1fr 0.7fr;
-  gap: 1px;
-  margin-top: 1.4rem;
-  background: rgba(251, 248, 240, 0.62);
-  border: 1px solid var(--line);
+.footer-seven__brand p,
+.footer-seven__bottom,
+.footer-seven__sections a {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.62;
 }
 
-.footer-grid > div {
-  min-height: 210px;
-  padding: 1rem;
-  background: var(--charcoal);
-  color: var(--paper-soft);
+.footer-seven__brand p {
+  max-width: 38rem;
 }
 
-.footer-grid h3 {
-  color: rgba(251, 248, 240, 0.86);
+.footer-seven__social,
+.footer-seven__sections ul,
+.footer-seven__bottom ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-seven__social {
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-seven__social a {
+  color: var(--blueprint);
   font-size: 0.72rem;
+  font-weight: 800;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
-.footer-grid a {
-  display: block;
-  margin-top: 0.72rem;
-  color: rgba(251, 248, 240, 0.7);
-  font-size: 0.82rem;
-  line-height: 1.52;
+.footer-seven__sections {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.4rem, 4vw, 3rem);
 }
 
-.footer-grid a:hover,
-.footer-grid a:focus-visible {
-  color: var(--paper-soft);
+.footer-seven__sections h3 {
+  margin: 0 0 0.9rem;
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.footer-seven__sections ul {
+  flex-direction: column;
+  gap: 0.62rem;
+}
+
+.footer-seven__sections a:hover,
+.footer-seven__sections a:focus-visible,
+.footer-seven__social a:hover,
+.footer-seven__social a:focus-visible,
+.footer-seven__bottom a:hover,
+.footer-seven__bottom a:focus-visible {
+  color: var(--ink);
+}
+
+.footer-seven__bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.footer-seven__bottom ul {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
 .reveal {
@@ -2540,8 +2597,9 @@ select:focus {
     min-height: 140px;
   }
 
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .footer-seven__top,
+  .footer-seven__sections {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -2615,9 +2673,21 @@ select:focus {
   .spec-fields,
   .material-table,
   .shop-standard__panel dl,
-  .notes-list,
-  .footer-grid {
+  .notes-list {
     grid-template-columns: 1fr;
+  }
+
+  .footer-seven__top,
+  .footer-seven__sections {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-seven__bottom {
+    flex-direction: column;
+  }
+
+  .footer-seven__bottom ul {
+    justify-content: flex-start;
   }
 
   .feature-spotlight {
@@ -2779,9 +2849,6 @@ select:focus {
     display: grid;
   }
 
-  .footer-grid > div {
-    min-height: auto;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
