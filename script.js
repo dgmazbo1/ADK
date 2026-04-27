@@ -41,8 +41,12 @@ document.body.insertAdjacentHTML(
                 <label>Email<input name="email" type="email" autocomplete="email" required /></label>
                 <label>Vehicle / Project<input name="project" type="text" /></label>
                 <label>What do you need built?<textarea name="need" rows="4" required></textarea></label>
+                <label class="build-modal__upload">
+                  Upload pictures <small>Up to 5 pictures</small>
+                  <input name="photos" type="file" accept="image/*" multiple data-build-modal-photos />
+                </label>
                 <button class="button line-button" type="submit" data-build-modal-submit>Submit Request</button>
-                <p class="build-modal__note">For photo uploads, budget range, and timeline, use the full request page.</p>
+                <p class="build-modal__note" data-build-modal-note>Pictures help ADK understand fitment, damage, measurements, and access points. Upload up to 5 pictures here, or use the full request page for more project details.</p>
               </div>
             </form>
           </div>
@@ -57,6 +61,8 @@ const buildModalForm = document.querySelector("[data-build-modal-form]");
 const buildModalFields = document.querySelector("[data-build-modal-fields]");
 const buildModalSuccess = document.querySelector("[data-build-modal-success]");
 const buildModalSubmit = document.querySelector("[data-build-modal-submit]");
+const buildModalPhotos = document.querySelector("[data-build-modal-photos]");
+const buildModalNote = document.querySelector("[data-build-modal-note]");
 let buildModalTrigger = null;
 
 function setHeaderState() {
@@ -189,6 +195,13 @@ document.querySelectorAll("[data-build-modal-close]").forEach((control) => {
 
 buildModalForm?.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (buildModalPhotos?.files?.length > 5) {
+    if (buildModalNote) {
+      buildModalNote.textContent = "Upload up to 5 pictures. Remove extra files before submitting.";
+    }
+    buildModalPhotos.focus();
+    return;
+  }
   if (buildModalSubmit) {
     buildModalSubmit.disabled = true;
     buildModalSubmit.textContent = "Reviewing...";

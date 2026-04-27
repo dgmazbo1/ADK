@@ -1447,6 +1447,41 @@ body.build-modal-open {
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
+.build-modal__upload {
+  padding: 0.8rem;
+  border: 1px dashed rgba(141, 181, 200, 0.48);
+  background: rgba(141, 181, 200, 0.08);
+}
+
+.build-modal__upload small {
+  color: rgba(251, 248, 240, 0.62);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.build-modal__upload input[type="file"] {
+  border: 0;
+  padding: 0.75rem 0 0;
+  background: transparent;
+  color: rgba(251, 248, 240, 0.78);
+}
+
+.build-modal__upload input[type="file"]::file-selector-button {
+  margin-right: 0.75rem;
+  border: 1px solid rgba(251, 248, 240, 0.32);
+  background: rgba(251, 248, 240, 0.12);
+  color: var(--paper-soft);
+  padding: 0.58rem 0.75rem;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 .build-modal__form input:focus,
 .build-modal__form textarea:focus {
   border-color: #8db5c8;
