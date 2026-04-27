@@ -2,16 +2,6 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const isAdminRoute = window.location.pathname.startsWith("/admin");
 const isAdminLoginRoute = window.location.pathname.replace(/\/$/, "") === "/admin/login";
 
-// Development-only route protection. Replace with server-side authentication,
-// secure sessions, and environment-backed secrets before production admin use.
-if (isAdminRoute && !isAdminLoginRoute && !window.localStorage.getItem("adk.admin.session")) {
-  window.location.replace("/admin/login");
-}
-
-if (isAdminLoginRoute && window.localStorage.getItem("adk.admin.session")) {
-  window.location.replace("/admin");
-}
-
 const header = document.querySelector("[data-site-header]");
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector(".site-nav");
@@ -1028,15 +1018,34 @@ document.querySelector("[data-toggle-password]")?.addEventListener("click", (eve
 
 document.querySelector("[data-admin-login-form]")?.addEventListener("submit", (event) => {
   event.preventDefault();
+  const form = event.currentTarget;
   const note = document.querySelector("[data-admin-login-note]");
-  note.textContent = "Signing in with development mock auth...";
-  window.localStorage.setItem("adk.admin.session", JSON.stringify({ signedInAt: new Date().toISOString() }));
-  window.setTimeout(() => window.location.assign("/admin"), prefersReducedMotion ? 0 : 500);
+  const button = form.querySelector("button[type='submit']");
+  note.textContent = "Checking admin credentials...";
+  if (button) button.textContent = "Checking";
+
+  fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: form.elements.email.value,
+      password: form.elements.password.value,
+    }),
+  })
+    .then(async (response) => {
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) throw new Error(data.message || "Unable to sign in.");
+      note.textContent = "Access confirmed. Opening admin dashboard...";
+      window.setTimeout(() => window.location.assign("/admin"), prefersReducedMotion ? 0 : 350);
+    })
+    .catch((error) => {
+      note.textContent = error.message;
+      if (button) button.textContent = "Sign in";
+    });
 });
 
 document.querySelector("[data-admin-logout]")?.addEventListener("click", () => {
-  window.localStorage.removeItem("adk.admin.session");
-  window.location.assign("/admin/login");
+  fetch("/api/admin/logout", { method: "POST" }).finally(() => window.location.assign("/admin/login"));
 });
 
 renderStore();
