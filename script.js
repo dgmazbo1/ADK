@@ -1019,48 +1019,6 @@ function renderAdminData() {
   }
 }
 
-function setupAdminLoginCanvas() {
-  const canvas = document.querySelector("[data-admin-login-canvas]");
-  if (!canvas) return;
-  const context = canvas.getContext("2d");
-  let frame = 0;
-  function draw() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    context.scale(dpr, dpr);
-    context.clearRect(0, 0, rect.width, rect.height);
-    context.fillStyle = "rgba(244,241,234,0.92)";
-    context.fillRect(0, 0, rect.width, rect.height);
-    const points = [];
-    for (let x = 28; x < rect.width; x += 34) {
-      for (let y = 28; y < rect.height; y += 34) points.push([x, y]);
-    }
-    context.fillStyle = "rgba(31,95,122,0.25)";
-    points.forEach(([x, y], index) => {
-      context.beginPath();
-      context.arc(x, y, index % 9 === frame % 9 ? 2.2 : 1.15, 0, Math.PI * 2);
-      context.fill();
-    });
-    context.strokeStyle = "rgba(47,141,170,0.62)";
-    context.lineWidth = 1.2;
-    context.beginPath();
-    const path = points.filter((_, index) => index % 17 === (frame % 17)).slice(0, 9);
-    path.forEach(([x, y], index) => (index ? context.lineTo(x, y) : context.moveTo(x, y)));
-    context.stroke();
-    context.fillStyle = "rgba(216,138,40,0.78)";
-    path.forEach(([x, y]) => {
-      context.beginPath();
-      context.arc(x, y, 2.8, 0, Math.PI * 2);
-      context.fill();
-    });
-    frame += 1;
-    if (!prefersReducedMotion) window.setTimeout(() => window.requestAnimationFrame(draw), 180);
-  }
-  draw();
-}
-
 document.querySelector("[data-toggle-password]")?.addEventListener("click", (event) => {
   const input = document.querySelector("[data-admin-password]");
   if (!input) return;
@@ -1085,7 +1043,6 @@ renderStore();
 renderProductDetail();
 renderCart();
 renderAdminData();
-setupAdminLoginCanvas();
 updateCartCount();
 
 const buildForm = document.querySelector(".build-form");

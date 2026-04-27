@@ -2979,16 +2979,82 @@ select:focus {
   background: var(--charcoal);
 }
 
-.admin-login__visual canvas {
+.admin-login__visual canvas,
+.admin-matter-scene,
+.admin-matter-scene canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.admin-login__visual > div {
-  position: relative;
+.admin-matter-scene::before,
+.admin-matter-scene::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.admin-matter-scene::before {
+  right: -7%;
+  top: 8%;
+  width: min(72%, 440px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(47, 141, 170, 0.42);
+  border-radius: 43% 57% 48% 52%;
+  background:
+    radial-gradient(circle at 42% 35%, rgba(47, 141, 170, 0.26), transparent 23%),
+    radial-gradient(circle at 62% 68%, rgba(216, 138, 40, 0.14), transparent 22%),
+    conic-gradient(from 20deg, transparent, rgba(47, 141, 170, 0.42), transparent 34%, rgba(244, 241, 234, 0.2), transparent 62%, rgba(216, 138, 40, 0.3), transparent);
+  opacity: 0.72;
+  filter: blur(0.2px);
+  animation: matter-orbit 20s ease-in-out infinite alternate;
+}
+
+.admin-matter-scene::after {
+  right: 1rem;
+  top: 2rem;
+  width: min(66%, 390px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    repeating-conic-gradient(from 12deg, rgba(244, 241, 234, 0.28) 0 1deg, transparent 1deg 9deg),
+    radial-gradient(circle, transparent 0 44%, rgba(47, 141, 170, 0.34) 44.3% 44.8%, transparent 45.2% 100%);
+  mask-image: radial-gradient(circle, transparent 0 36%, #000 37% 72%, transparent 73%);
+  opacity: 0.34;
+  animation: matter-spin 34s linear infinite;
+}
+
+.admin-login__visual--matter {
+  background:
+    radial-gradient(circle at 55% 34%, rgba(47, 141, 170, 0.2), transparent 19rem),
+    radial-gradient(circle at 18% 82%, rgba(216, 138, 40, 0.13), transparent 17rem),
+    var(--charcoal);
+}
+
+@keyframes matter-orbit {
+  0% { transform: rotate(-8deg) translate3d(0, 0, 0) scale(0.96); }
+  100% { transform: rotate(9deg) translate3d(-3%, 4%, 0) scale(1.04); }
+}
+
+@keyframes matter-spin {
+  to { transform: rotate(360deg); }
+}
+
+.admin-login__visual--matter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(32, 39, 43, 0.02), rgba(32, 39, 43, 0.72)),
+    linear-gradient(90deg, rgba(32, 39, 43, 0.04), rgba(32, 39, 43, 0.34));
+  pointer-events: none;
+}
+
+.admin-login__visual > div:not(.admin-matter-scene) {
+  position: relative;
+  z-index: 2;
   display: grid;
   align-content: end;
   min-height: 100%;

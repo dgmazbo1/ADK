@@ -7,116 +7,12 @@ import { motion, useReducedMotion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { GenerativeArtScene } from "@/components/ui/anomalous-matter-hero"
 import { cn } from "@/lib/utils"
 
 type AdkAdminSigninProps = React.HTMLAttributes<HTMLElement> & {
   logoSrc?: string
   onMockSubmit?: (values: { email: string; password: string }) => void
-}
-
-function TechnicalDotGridCanvas({ className }: { className?: string }) {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null)
-  const prefersReducedMotion = useReducedMotion()
-
-  React.useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const context = canvas.getContext("2d")
-    if (!context) return
-
-    let animationFrame = 0
-    let frame = 0
-    const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2)
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      canvas.width = Math.max(1, Math.floor(rect.width * devicePixelRatio))
-      canvas.height = Math.max(1, Math.floor(rect.height * devicePixelRatio))
-      context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0)
-    }
-
-    const draw = () => {
-      const width = canvas.clientWidth
-      const height = canvas.clientHeight
-      const spacing = 36
-      const drift = prefersReducedMotion ? 0 : Math.sin(frame / 90) * 8
-
-      context.clearRect(0, 0, width, height)
-      context.fillStyle = "#20272B"
-      context.fillRect(0, 0, width, height)
-
-      context.strokeStyle = "rgba(47, 141, 170, 0.16)"
-      context.lineWidth = 1
-      for (let x = -spacing; x < width + spacing; x += spacing) {
-        context.beginPath()
-        context.moveTo(x + drift, 0)
-        context.lineTo(x - 60 + drift, height)
-        context.stroke()
-      }
-
-      for (let y = 0; y < height + spacing; y += spacing) {
-        context.beginPath()
-        context.moveTo(0, y)
-        context.lineTo(width, y + drift * 0.35)
-        context.stroke()
-      }
-
-      const nodes = [
-        [0.18, 0.22, "#2F8DAA"],
-        [0.34, 0.46, "#1F5F7A"],
-        [0.58, 0.32, "#D88A28"],
-        [0.74, 0.62, "#2F8DAA"],
-        [0.43, 0.76, "#D88A28"],
-      ] as const
-
-      context.strokeStyle = "rgba(244, 241, 234, 0.45)"
-      context.lineWidth = 1.4
-      context.beginPath()
-      nodes.forEach(([x, y], index) => {
-        const px = x * width
-        const py = y * height
-        if (index === 0) context.moveTo(px, py)
-        else context.lineTo(px, py)
-      })
-      context.stroke()
-
-      nodes.forEach(([x, y, color], index) => {
-        const px = x * width
-        const py = y * height
-        const pulse = prefersReducedMotion ? 0 : Math.sin(frame / 28 + index) * 1.8
-        context.fillStyle = color
-        context.beginPath()
-        context.arc(px, py, 3.5 + pulse, 0, Math.PI * 2)
-        context.fill()
-
-        context.strokeStyle = color.replace(")", ", 0.18)")
-        context.beginPath()
-        context.arc(px, py, 18 + pulse * 2, 0, Math.PI * 2)
-        context.stroke()
-      })
-
-      context.fillStyle = "rgba(244, 241, 234, 0.54)"
-      context.font = "600 10px ui-monospace, SFMono-Regular, Menlo, monospace"
-      context.fillText("CAD GRID / INTERNAL ACCESS", 24, height - 28)
-
-      frame += 1
-      if (!prefersReducedMotion) {
-        animationFrame = window.requestAnimationFrame(draw)
-      }
-    }
-
-    resize()
-    draw()
-    window.addEventListener("resize", resize)
-
-    return () => {
-      window.removeEventListener("resize", resize)
-      window.cancelAnimationFrame(animationFrame)
-    }
-  }, [prefersReducedMotion])
-
-  return <canvas ref={canvasRef} className={cn("absolute inset-0 size-full", className)} aria-hidden="true" />
 }
 
 export default function AdkAdminSignin({
@@ -158,8 +54,9 @@ export default function AdkAdminSignin({
         className="grid w-full max-w-5xl overflow-hidden rounded-2xl border border-[#C8C3B8] bg-[#FBF8F0] shadow-[0_28px_90px_rgba(30,36,40,0.16)] lg:grid-cols-[1.08fr_0.92fr]"
       >
         <div className="relative hidden min-h-[620px] overflow-hidden bg-[#20272B] lg:block">
-          <TechnicalDotGridCanvas />
-          <div className="relative z-[1] flex min-h-full flex-col justify-end p-10 text-[#F4F1EA]">
+          <GenerativeArtScene />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-t from-[#20272B] via-[#20272B]/72 to-transparent" />
+          <div className="relative z-[2] flex min-h-full flex-col justify-end p-10 text-[#F4F1EA]">
             <img src={logoSrc} alt="" className="mb-6 h-14 w-14 object-contain" />
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#2F8DAA]">
               ADK Admin

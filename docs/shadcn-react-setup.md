@@ -13,6 +13,7 @@ The requested React files have been placed in the conventional shadcn path:
 - Footer demo entry: `/components/footer-7-demo.tsx`
 - Spatial product showcase demo entry: `/components/spatial-product-showcase-demo.tsx`
 - ADK admin sign-in demo entry: `/components/adk-admin-signin-demo.tsx`
+- Anomalous matter hero demo entry: `/components/anomalous-matter-hero-demo.tsx`
 
 Creating `/components/ui` matters because shadcn components and the provided imports use the `@/components/ui/...` alias. Keeping that convention makes copied components portable across shadcn examples and avoids rewriting imports later.
 
@@ -35,8 +36,10 @@ The current static site stylesheet is `/styles.css`. In a shadcn React app, the 
 - Added footer component: `footer-7`
 - Added product showcase component: `spatial-product-showcase`
 - Added admin component: `adk-admin-signin`
+- Added generative Three.js component: `anomalous-matter-hero`
 - Added animation/shader dependencies for future React use: `framer-motion` and `@paper-design/shaders-react`
 - Added icon dependency for footer/social components: `react-icons`
+- Added 3D dependency for admin login background: `three`
 - The live static site uses `/styles.css`; the provided Tailwind theme snippet should be applied later to the actual Tailwind global stylesheet after the project is migrated.
 
 ## Recommended Setup
