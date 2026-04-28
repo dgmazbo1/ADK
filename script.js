@@ -1094,14 +1094,56 @@ const buildForm = document.querySelector(".build-form");
 const formNote = document.querySelector(".form-note");
 
 if (buildForm && formNote) {
-  buildForm.addEventListener("submit", (event) => {
+  buildForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const isContactForm = buildForm.classList.contains("contact-form");
-    formNote.textContent = isContactForm
-      ? "Message staged. Call ADK at (702) 810-9021 to connect this form to live contact."
-      : "Build request staged. Call ADK at (702) 810-9021 to connect this form to live intake.";
-    buildForm.querySelector("button[type='submit']").textContent = isContactForm
-      ? "Message Staged"
-      : "Request Staged";
+    const submitBtn = buildForm.querySelector("button[type='submit']");
+    const originalLabel = submitBtn?.textContent;
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
+    formNote.textContent = "Sending…";
+    formNote.style.color = "";
+
+    const formData = new FormData(buildForm);
+    const endpoint = isContactForm ? "/api/public/quote-request" : "/api/public/build-request";
+
+    const payload = isContactForm
+      ? {
+          contact_name: formData.get("name") || "",
+          contact_email: formData.get("email") || "",
+          contact_phone: formData.get("phone") || "",
+          product_name: formData.get("project") || formData.get("subject") || "",
+          message: formData.get("need") || formData.get("message") || "",
+          source: "contact-form",
+        }
+      : {
+          contact_name: formData.get("name") || "",
+          contact_email: formData.get("email") || "",
+          contact_phone: formData.get("phone") || "",
+          vehicle: formData.get("project") || "",
+          scope: formData.get("need") || "",
+          timeline: formData.get("timeline") || "",
+          budget: formData.get("budget") || "",
+          source: "build-request-form",
+        };
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) throw new Error(data.message || `Submit failed (${response.status})`);
+      formNote.textContent = isContactForm
+        ? "Got it — ADK will reply by email or phone."
+        : "Build request received. ADK will follow up directly.";
+      formNote.style.color = "var(--blueprint, #315e74)";
+      buildForm.reset();
+      if (submitBtn) submitBtn.textContent = isContactForm ? "Message Sent" : "Request Sent";
+    } catch (error) {
+      formNote.textContent = `Couldn't submit: ${error.message}. Call ADK at (702) 810-9021.`;
+      formNote.style.color = "#9f2632";
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalLabel; }
+    }
   });
 }

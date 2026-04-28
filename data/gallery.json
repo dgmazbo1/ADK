@@ -1,0 +1,59 @@
+{
+  "items": [
+    {
+      "id": "weld-detail",
+      "category": "weld",
+      "size": "span-2",
+      "title": "TIG Weld Detail",
+      "note": "Controlled heat / shop finish",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/hero-welding-v2-Dwy2UyuPXnV2BT8WswKmAm.webp",
+      "alt": "Welder creating controlled sparks in a fabrication shop"
+    },
+    {
+      "id": "cad-to-metal",
+      "category": "cad",
+      "size": "",
+      "title": "CAD To Metal",
+      "note": "Cut profiles / brackets",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/laser-cutting-user_be584be4.jpg",
+      "alt": "Laser cut metal component detail"
+    },
+    {
+      "id": "trailer-repair",
+      "category": "repair",
+      "size": "tall",
+      "title": "Trailer Repair",
+      "note": "Structural reinforcement",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/trailer-repair-user_a0ea39bf.jpg",
+      "alt": "Trailer repair and structural fabrication work"
+    },
+    {
+      "id": "air-ride-component",
+      "category": "truck",
+      "size": "",
+      "title": "Air Ride Component",
+      "note": "Steel / Peterbilt fitment",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/air-ride-user_6d45a40e.jpg",
+      "alt": "Air ride suspension fabrication components"
+    },
+    {
+      "id": "tank-product",
+      "category": "tank",
+      "size": "",
+      "title": "Tank Product",
+      "note": "Aluminum / shop-built",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/coolant-tank-v1_c26f55db.png",
+      "alt": "Custom fabricated cooling tank component"
+    },
+    {
+      "id": "overland-finished",
+      "category": "overland",
+      "size": "wide",
+      "title": "Overland / Finished Parts",
+      "note": "Measure / mockup / build",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/fabrication-shop-v2-2JfevkRadwYjNzsMAGApkz.webp",
+      "alt": "Fabrication shop floor with work tables and metalworking equipment"
+    }
+  ],
+  "updatedAt": "2026-04-27T00:00:00.000Z"
+}

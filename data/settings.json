@@ -1,0 +1,23 @@
+{
+  "shop": {
+    "name": "After Dark Kreations",
+    "phone": "(702) 810-9021",
+    "email": "Rudy@AfterDarkKreations.com",
+    "address": "2053 Pabco Rd, Henderson, NV 89011",
+    "mapUrl": "https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011",
+    "hours": "Mon–Fri 7am–5pm",
+    "leadTimeNote": "Most builds run 4–6 weeks once vehicle details are confirmed."
+  },
+  "social": {
+    "instagram": "",
+    "facebook": "",
+    "youtube": ""
+  },
+  "integrations": {
+    "ghlBuildRequestWebhook": "",
+    "ghlQuoteRequestWebhook": "",
+    "shopifyDomain": "",
+    "shopifyConfigured": false
+  },
+  "updatedAt": "2026-04-27T00:00:00.000Z"
+}
