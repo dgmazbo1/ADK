@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Products | ADK Admin</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/admin/assets/admin.css" />
+</head>
+<body>
+<div class="admin-shell">
+  <header class="admin-topbar"><button class="admin-menu-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation" data-admin-menu-toggle><span></span></button><a class="admin-topbar__brand" href="/admin"><img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="ADK" /><span>ADK Admin</span></a><div class="admin-topbar__actions"><span class="admin-topbar__user">Signed in</span><button class="admin-btn admin-btn--small admin-btn--ghost" type="button" data-admin-publish>Publish</button><button class="admin-btn admin-btn--small" type="button" data-admin-logout>Sign out</button></div></header>
+  <aside class="admin-sidebar" data-admin-sidebar><div class="admin-sidebar__group"><p class="admin-sidebar__label">Overview</p><a class="admin-sidebar__link" href="/admin">Dashboard</a></div><div class="admin-sidebar__group"><p class="admin-sidebar__label">Customers</p><a class="admin-sidebar__link" href="/admin/build-requests">Build Requests</a><a class="admin-sidebar__link" href="/admin/quote-requests">Quote Requests</a></div><div class="admin-sidebar__group"><p class="admin-sidebar__label">Site Content</p><a class="admin-sidebar__link" href="/admin/gallery">Gallery</a><a class="admin-sidebar__link" href="/admin/shop-notes">Shop Notes</a><a class="admin-sidebar__link" href="/admin/settings">Settings</a></div><div class="admin-sidebar__group"><p class="admin-sidebar__label">Storefront</p><a class="admin-sidebar__link" href="/admin/products">Products</a><a class="admin-sidebar__link" href="/admin/categories">Categories</a><a class="admin-sidebar__link" href="/admin/orders">Orders</a><a class="admin-sidebar__link" href="https://admin.shopify.com" target="_blank" rel="noopener">Shopify Admin ↗</a></div></aside>
+  <div class="admin-scrim" data-admin-scrim></div>
+  <main class="admin-main"><div class="admin-main__header"><div><p class="admin-eyebrow">Shopify Commerce</p><h1 class="admin-main__title">Products</h1><p class="admin-main__sub">Shopify is the source of truth for sellable ADK products. Use this page to verify product sync and jump into Shopify for edits.</p></div><div class="admin-main__actions"><a class="admin-btn admin-btn--ghost" href="https://admin.shopify.com" target="_blank" rel="noopener">Open Shopify Products ↗</a></div></div><section class="admin-card"><h2 class="admin-card__title">Storefront Products</h2><p class="admin-card__sub" data-products-mode>Loading commerce mode…</p><div class="admin-table" data-admin-products-table></div></section></main>
+</div>
+<script src="/admin/assets/admin.js"></script>
+<script>
+(async function productsAdmin() {
+  if (!await window.ADKAdmin.ensureAuth()) return;
+  const [status, catalog] = await Promise.all([
+    window.ADKAdmin.api("GET", "/api/admin/shopify/status").catch(() => ({})),
+    fetch("/api/public/products").then((r) => r.json()).catch(() => ({ products: [] })),
+  ]);
+  document.querySelector("[data-products-mode]").innerHTML = status?.shopify?.configured
+    ? `Connected to <strong>${window.ADKAdmin.escapeHtml(status.shopify.domain)}</strong>. Product edits happen in Shopify.`
+    : `Local fallback mode. Checkout is disabled until Shopify env vars are set.`;
+  const products = catalog.products || [];
+  const table = document.querySelector("[data-admin-products-table]");
+  table.innerHTML = `<div class="admin-table__head"><span>Image</span><span>Name</span><span>Category</span><span>Price</span><span>Status</span><span>Inventory</span><span>Action</span></div>${products.map((product) => `<div class="admin-table__row"><img src="${window.ADKAdmin.escapeHtml(product.images?.[0] || product.image || "")}" alt="" /><span>${window.ADKAdmin.escapeHtml(product.name || product.title)}</span><span>${window.ADKAdmin.escapeHtml(product.category || "")}</span><span>${product.price ? "$" + Number(product.price).toLocaleString() : "Request Pricing"}</span><span>${window.ADKAdmin.escapeHtml(product.status || "")}</span><span>${product.inventory ?? "—"}</span><a href="${status?.shopify?.configured ? "https://admin.shopify.com" : "/store/" + product.slug}" target="_blank" rel="noopener">${status?.shopify?.configured ? "Edit in Shopify ↗" : "View"}</a></div>`).join("")}`;
+})();
+</script>
+</body>
+</html>

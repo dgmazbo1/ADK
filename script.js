@@ -376,7 +376,7 @@ const defaultProductData = [
   },
 ];
 
-const ecommerceProducts = Array.isArray(window.ADK_PRODUCTS) && window.ADK_PRODUCTS.length
+let ecommerceProducts = Array.isArray(window.ADK_PRODUCTS) && window.ADK_PRODUCTS.length
   ? window.ADK_PRODUCTS
   : defaultProductData.map((product, index) => ({
       id: product.id,
@@ -397,6 +397,18 @@ const ecommerceProducts = Array.isArray(window.ADK_PRODUCTS) && window.ADK_PRODU
       specifications: product.parts || [],
       featured: index < 3,
     }));
+
+window.ADKSetProducts = function ADKSetProducts(products) {
+  if (!Array.isArray(products) || !products.length) return;
+  ecommerceProducts = products;
+  const categoryWrap = document.querySelector("[data-store-categories]");
+  const filterWrap = document.querySelector("[data-store-filters]");
+  if (categoryWrap) categoryWrap.innerHTML = "";
+  if (filterWrap) filterWrap.innerHTML = "";
+  renderStore();
+  renderProductDetail();
+  renderCart();
+};
 
 const defaultGalleryData = [
   {
@@ -795,7 +807,9 @@ renderAdminLists();
 const cartKey = "adk.store.cart";
 
 function formatPrice(value) {
-  return typeof value === "number" ? `$${value.toLocaleString()}` : "Request Pricing";
+  return typeof value === "number"
+    ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value)
+    : "Request Pricing";
 }
 
 function getCart() {
@@ -813,6 +827,16 @@ function setCart(cart) {
 }
 
 function updateCartCount() {
+  if (window.ADKShopify?.isConfigured?.()) {
+    window.ADKShopify.getCart?.().then((cart) => {
+      document.querySelectorAll("[data-cart-count]").forEach((node) => {
+        node.textContent = String(cart?.totalQuantity || 0);
+      });
+    }).catch(() => {
+      document.querySelectorAll("[data-cart-count]").forEach((node) => { node.textContent = "0"; });
+    });
+    return;
+  }
   const count = getCart().reduce((sum, item) => sum + Number(item.quantity || 0), 0);
   document.querySelectorAll("[data-cart-count]").forEach((node) => {
     node.textContent = String(count);
@@ -820,12 +844,13 @@ function updateCartCount() {
 }
 
 function productCard(product, compact = false) {
-  const canBuy = !product.requestPricing && typeof product.price === "number" && product.inventory > 0;
+  const canBuy = !product.requestPricing && typeof product.price === "number" && (product.inventory === null || product.inventory > 0) && product.variantId;
+  const status = product.status || (canBuy ? "In Stock" : "Request Pricing");
   return `
     <article class="store-card ${compact ? "store-card--compact" : ""}" data-category="${escapeHtml(product.category)}" data-product-id="${escapeHtml(product.id)}">
       <a class="store-card__image" href="/store/${escapeHtml(product.slug)}">
         <img loading="lazy" src="${escapeHtml(product.images?.[0] || "")}" alt="${escapeHtml(product.name)}" />
-        <span>${escapeHtml(product.status)}</span>
+        <span>${escapeHtml(status)}</span>
       </a>
       <div class="store-card__body">
         <p class="eyebrow">${escapeHtml(product.category)}</p>
@@ -834,7 +859,7 @@ function productCard(product, compact = false) {
         <dl class="store-card__specs">
           <div><dt>Fitment</dt><dd>${escapeHtml(product.fitment)}</dd></div>
           <div><dt>Material</dt><dd>${escapeHtml(product.material)}</dd></div>
-          <div><dt>Lead Time</dt><dd>${escapeHtml(product.leadTime)}</dd></div>
+          <div><dt>Lead Time</dt><dd>${escapeHtml(product.leadTime || "Confirmed at checkout")}</dd></div>
           <div><dt>Price</dt><dd>${formatPrice(product.price)}</dd></div>
         </dl>
         <div class="store-card__actions">
@@ -842,7 +867,7 @@ function productCard(product, compact = false) {
           ${
             canBuy
               ? `<button class="button line-button" type="button" data-add-cart="${escapeHtml(product.id)}">Add To Cart</button>`
-              : `<a class="button line-button" href="/build-request">Request Quote</a>`
+              : `<a class="button line-button" href="/build-request?product=${encodeURIComponent(product.slug || product.handle || product.id)}">Request Quote</a>`
           }
         </div>
       </div>
@@ -869,6 +894,7 @@ function getFilteredProducts() {
   if (sort === "Price: Low to High") products = products.sort((a, b) => (a.price ?? 999999) - (b.price ?? 999999));
   if (sort === "Price: High to Low") products = products.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
   if (sort === "Newest") products = products.slice().reverse();
+  if (sort === "Availability") products = products.sort((a, b) => Number(!b.requestPricing && b.availableForSale !== false) - Number(!a.requestPricing && a.availableForSale !== false));
   if (sort === "Featured") products = products.sort((a, b) => Number(b.featured) - Number(a.featured));
   return products;
 }
@@ -881,9 +907,16 @@ function renderStore() {
   const categoryWrap = document.querySelector("[data-store-categories]");
   const filterWrap = document.querySelector("[data-store-filters]");
   if (categoryWrap && !categoryWrap.children.length) {
+    const requestedCategory = new URLSearchParams(window.location.search).get("category");
     categoryWrap.innerHTML = categories
-      .map((category, index) => `<button type="button" aria-selected="${index === 0}" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`)
+      .map((category, index) => {
+        const selected = requestedCategory ? category.toLowerCase().includes(requestedCategory.replace(/-/g, " ").toLowerCase()) : index === 0;
+        return `<button type="button" aria-selected="${selected}" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`;
+      })
       .join("");
+    if (!categoryWrap.querySelector("[aria-selected='true']")) {
+      categoryWrap.querySelector("button")?.setAttribute("aria-selected", "true");
+    }
   }
   if (filterWrap && !filterWrap.children.length) {
     filterWrap.innerHTML = chips
@@ -916,18 +949,41 @@ document.addEventListener("click", (event) => {
   if (!addButton) return;
   const product = ecommerceProducts.find((item) => item.id === addButton.dataset.addCart || item.id === addButton.dataset.productId);
   if (!product) return;
-  if (product.requestPricing || typeof product.price !== "number") {
-    window.location.href = "/build-request";
+  if (product.requestPricing || typeof product.price !== "number" || (!window.ADKShopify?.isConfigured?.() && !product.variantId)) {
+    window.location.href = `/build-request?product=${encodeURIComponent(product.slug || product.handle || product.id)}`;
     return;
   }
   const quantity = Number(document.querySelector("[data-detail-qty]")?.value || 1);
+  const originalText = addButton.textContent;
+  addButton.disabled = true;
+  addButton.textContent = "Adding";
+  if (window.ADKShopify?.isConfigured?.() && product.variantId) {
+    window.ADKShopify.addToCart(product.variantId, quantity)
+      .then(() => {
+        addButton.textContent = "Added";
+        updateCartCount();
+      })
+      .catch((error) => {
+        addButton.textContent = error.message.includes("variant") ? "Select Variant" : "Cart Error";
+      })
+      .finally(() => {
+        window.setTimeout(() => {
+          addButton.disabled = false;
+          addButton.textContent = originalText || "Add To Cart";
+        }, 1100);
+      });
+    return;
+  }
   const cart = getCart();
   const existing = cart.find((item) => item.id === product.id);
   if (existing) existing.quantity += quantity;
   else cart.push({ id: product.id, quantity });
   setCart(cart);
   addButton.textContent = "Added";
-  window.setTimeout(() => (addButton.textContent = "Add To Cart"), 900);
+  window.setTimeout(() => {
+    addButton.disabled = false;
+    addButton.textContent = originalText || "Add To Cart";
+  }, 900);
 });
 
 function renderProductDetail() {
@@ -949,13 +1005,31 @@ function renderProductDetail() {
   detail.querySelector("[data-detail-fitment-text]").textContent = product.fitment;
   detail.querySelector("[data-detail-material-text]").textContent = product.material;
   detail.querySelector("[data-detail-lead]").textContent = product.leadTime;
+  const shipping = detail.querySelector("[data-detail-shipping]");
+  if (shipping) shipping.textContent = product.shippingNotes || "Secure checkout powered by Shopify. Pickup can be arranged by ADK.";
   detail.querySelector("[data-detail-notes]").textContent = product.buildNotes;
   detail.querySelector("[data-detail-specs]").innerHTML = (product.specifications || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
   detail.querySelector("[data-detail-thumbs]").innerHTML = (product.images || [])
     .map((image) => `<button type="button"><img src="${escapeHtml(image)}" alt="${escapeHtml(product.name)} thumbnail" /></button>`)
     .join("");
   primary.dataset.productId = product.id;
-  primary.textContent = product.requestPricing ? "Request Quote" : "Add To Cart";
+  primary.dataset.addCart = product.id;
+  const detailCanBuy = !product.requestPricing && typeof product.price === "number" && product.variantId;
+  primary.textContent = detailCanBuy ? "Add To Cart" : "Request Quote";
+  const buyNow = detail.querySelector("[data-buy-now]");
+  if (buyNow) {
+    buyNow.hidden = !detailCanBuy;
+    buyNow.dataset.productId = product.id;
+  }
+  const variantWrap = detail.querySelector("[data-variant-wrap]");
+  if (variantWrap && Array.isArray(product.variants) && product.variants.length > 1) {
+    variantWrap.innerHTML = `<label>Variant<select data-product-variant>${product.variants
+      .map((variant) => `<option value="${escapeHtml(variant.id)}" ${variant.id === product.variantId ? "selected" : ""} ${variant.availableForSale ? "" : "disabled"}>${escapeHtml(variant.title)}${variant.availableForSale ? "" : " — sold out"}</option>`)
+      .join("")}</select></label>`;
+    variantWrap.querySelector("select")?.addEventListener("change", (event) => {
+      product.variantId = event.target.value;
+    });
+  }
   detail.querySelector("[data-detail-thumbs]")?.addEventListener("click", (event) => {
     const img = event.target.closest("img");
     if (img) detail.querySelector("[data-detail-image]").src = img.src;
@@ -970,9 +1044,55 @@ function renderProductDetail() {
   }
 }
 
+document.querySelector("[data-buy-now]")?.addEventListener("click", async (event) => {
+  const button = event.currentTarget;
+  const product = ecommerceProducts.find((item) => item.id === button.dataset.productId);
+  if (!product?.variantId) return;
+  button.disabled = true;
+  button.textContent = "Opening Checkout";
+  try {
+    if (!window.ADKShopify?.isConfigured?.()) throw new Error("Shopify checkout is not connected yet.");
+    await window.ADKShopify.addToCart(product.variantId, Number(document.querySelector("[data-detail-qty]")?.value || 1));
+    const url = await window.ADKShopify.getCheckoutUrl();
+    if (!url) throw new Error("Checkout unavailable.");
+    window.location.href = url;
+  } catch (error) {
+    button.textContent = error.message || "Checkout Error";
+    window.setTimeout(() => {
+      button.disabled = false;
+      button.textContent = "Buy Now";
+    }, 1400);
+  }
+});
+
 function renderCart() {
   const cartItems = document.querySelector("[data-cart-items]");
   if (!cartItems) return;
+  if (window.ADKShopify?.isConfigured?.()) {
+    cartItems.innerHTML = `<div class="store-empty"><p class="eyebrow">Cart</p><h2>Loading Shopify cart…</h2><p>Secure checkout powered by Shopify.</p></div>`;
+    window.ADKShopify.getCart().then((cart) => {
+      if (!cart?.lines?.length) {
+        cartItems.innerHTML = `<div class="store-empty"><p class="eyebrow">Cart Empty</p><h2>No Shopify products are in the cart.</h2><p>Request-pricing products move through the quote flow.</p><a class="button line-button" href="/store">Shop ADK</a></div>`;
+        document.querySelector("[data-cart-subtotal]").textContent = "$0.00";
+        updateCartCount();
+        return;
+      }
+      cartItems.innerHTML = cart.lines.map((item) => `
+        <article class="cart-row">
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title)}" />
+          <div><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.variantTitle)} · ${window.ADKShopify.formatMoney(item.price)}</p></div>
+          <label>Qty<input type="number" min="1" value="${item.quantity}" data-shopify-cart-qty="${escapeHtml(item.id)}" /></label>
+          <strong>${window.ADKShopify.formatMoney((item.price?.amount || 0) * item.quantity)}</strong>
+          <button type="button" data-shopify-cart-remove="${escapeHtml(item.id)}">Remove</button>
+        </article>
+      `).join("");
+      document.querySelector("[data-cart-subtotal]").textContent = window.ADKShopify.formatMoney(cart.subtotal);
+      document.querySelectorAll("[data-cart-count]").forEach((node) => { node.textContent = String(cart.totalQuantity || 0); });
+    }).catch(() => {
+      cartItems.innerHTML = `<div class="store-empty"><p class="eyebrow">Cart Error</p><h2>The Shopify cart could not be loaded.</h2><p>Try refreshing the page, or contact ADK directly.</p></div>`;
+    });
+    return;
+  }
   const cart = getCart();
   const rows = cart.map((item) => ({ ...item, product: ecommerceProducts.find((product) => product.id === item.id) })).filter((item) => item.product);
   const subtotal = rows.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -995,6 +1115,11 @@ function renderCart() {
 }
 
 document.querySelector("[data-cart-items]")?.addEventListener("input", (event) => {
+  const shopifyInput = event.target.closest("[data-shopify-cart-qty]");
+  if (shopifyInput && window.ADKShopify?.isConfigured?.()) {
+    window.ADKShopify.updateLineQuantity(shopifyInput.dataset.shopifyCartQty, Math.max(1, Number(shopifyInput.value || 1))).then(renderCart).catch(renderCart);
+    return;
+  }
   const input = event.target.closest("[data-cart-qty]");
   if (!input) return;
   const cart = getCart().map((item) => (item.id === input.dataset.cartQty ? { ...item, quantity: Math.max(1, Number(input.value || 1)) } : item));
@@ -1002,6 +1127,11 @@ document.querySelector("[data-cart-items]")?.addEventListener("input", (event) =
   renderCart();
 });
 document.querySelector("[data-cart-items]")?.addEventListener("click", (event) => {
+  const shopifyButton = event.target.closest("[data-shopify-cart-remove]");
+  if (shopifyButton && window.ADKShopify?.isConfigured?.()) {
+    window.ADKShopify.updateLineQuantity(shopifyButton.dataset.shopifyCartRemove, 0).then(renderCart).catch(renderCart);
+    return;
+  }
   const button = event.target.closest("[data-cart-remove]");
   if (!button) return;
   setCart(getCart().filter((item) => item.id !== button.dataset.cartRemove));
@@ -1094,6 +1224,19 @@ const buildForm = document.querySelector(".build-form");
 const formNote = document.querySelector(".form-note");
 
 if (buildForm && formNote) {
+  const requestedProduct = new URLSearchParams(window.location.search).get("product");
+  if (requestedProduct) {
+    const projectField = buildForm.elements.project;
+    const needField = buildForm.elements.need;
+    const product = ecommerceProducts.find((item) => item.slug === requestedProduct || item.handle === requestedProduct || item.id === requestedProduct);
+    if (projectField && !projectField.value) projectField.value = product?.fitment || requestedProduct;
+    if (needField && !needField.value) {
+      needField.value = product
+        ? `Quote request for ${product.name || product.title} (${product.slug || product.handle}). Product URL: ${window.location.origin}/store/${product.slug || product.handle}`
+        : `Quote request for ADK store product: ${requestedProduct}. Product URL: ${window.location.origin}/store/${requestedProduct}`;
+    }
+  }
+
   buildForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const isContactForm = buildForm.classList.contains("contact-form");
@@ -1104,7 +1247,8 @@ if (buildForm && formNote) {
     formNote.style.color = "";
 
     const formData = new FormData(buildForm);
-    const endpoint = isContactForm ? "/api/public/quote-request" : "/api/public/build-request";
+    const productForQuote = new URLSearchParams(window.location.search).get("product");
+    const endpoint = isContactForm || productForQuote ? "/api/public/quote-request" : "/api/public/build-request";
 
     const payload = isContactForm
       ? {
@@ -1114,6 +1258,20 @@ if (buildForm && formNote) {
           product_name: formData.get("project") || formData.get("subject") || "",
           message: formData.get("need") || formData.get("message") || "",
           source: "contact-form",
+        }
+      : productForQuote
+      ? {
+          contact_name: formData.get("name") || "",
+          contact_email: formData.get("email") || "",
+          contact_phone: formData.get("phone") || "",
+          product_handle: productForQuote,
+          product_url: `${window.location.origin}/store/${productForQuote}`,
+          product_name: productForQuote,
+          vehicle: formData.get("project") || "",
+          message: formData.get("need") || "",
+          timeline: formData.get("timeline") || "",
+          budget: formData.get("budget") || "",
+          source: "store-request-pricing",
         }
       : {
           contact_name: formData.get("name") || "",

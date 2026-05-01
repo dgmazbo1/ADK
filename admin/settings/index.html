@@ -44,6 +44,9 @@
     </div>
     <div class="admin-sidebar__group">
       <p class="admin-sidebar__label">Storefront</p>
+      <a class="admin-sidebar__link" href="/admin/products">Products</a>
+      <a class="admin-sidebar__link" href="/admin/categories">Categories</a>
+      <a class="admin-sidebar__link" href="/admin/orders">Orders</a>
       <a class="admin-sidebar__link" href="https://admin.shopify.com" target="_blank" rel="noopener">Shopify Admin ↗</a>
     </div>
   </aside>
@@ -164,13 +167,13 @@
     bindForm();
 
     // Integration status from public config + submissions probe
-    const config = await fetch("/api/public/config").then((r) => r.json()).catch(() => ({}));
+    const config = await window.ADKAdmin.api("GET", "/api/admin/shopify/status").catch(() => ({}));
     const shopifyEl = document.querySelector("[data-shopify-status]");
     if (config?.shopify?.configured) {
-      shopifyEl.innerHTML = `Connected · <strong>${window.ADKAdmin.escapeHtml(config.shopify.domain)}</strong>`;
+      shopifyEl.innerHTML = `Connected · <strong>${window.ADKAdmin.escapeHtml(config.shopify.domain)}</strong> · ${Number(config.shopify.productCount || 0)} products returned · checkout ${config.shopify.checkoutEnabled ? "enabled" : "disabled"}`;
       shopifyEl.style.color = "var(--admin-success)";
     } else {
-      shopifyEl.innerHTML = `Not connected — set <code>SHOPIFY_DOMAIN</code> + <code>SHOPIFY_STOREFRONT_TOKEN</code>`;
+      shopifyEl.innerHTML = `Not connected — using local fallback products. Set <code>SHOPIFY_DOMAIN</code>, <code>SHOPIFY_STOREFRONT_TOKEN</code>, and <code>SHOPIFY_API_VERSION</code>`;
       shopifyEl.style.color = "var(--admin-warn)";
     }
 

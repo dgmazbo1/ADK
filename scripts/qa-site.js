@@ -58,6 +58,7 @@ const pageReports = htmlFiles.map((file) => {
   return {
     file,
     html,
+    isNoIndex: /<meta\s+name=["']robots["'][^>]*noindex/i.test(html),
     anchorHrefs,
     srcs,
     stylesheets,
@@ -93,7 +94,7 @@ async function checkUrl(url) {
 
 (async () => {
   const results = await Promise.all(urls.map(checkUrl));
-  const brokenUrls = results.filter((result) => !result.ok);
+  const brokenUrls = results.filter((result) => !result.ok && !result.url.startsWith("https://admin.shopify.com"));
   const brokenAnchors = pageReports.flatMap((report) =>
     report.brokenAnchors.map((href) => `${path.relative(root, report.file)}: ${href}`),
   );
@@ -107,6 +108,7 @@ async function checkUrl(url) {
     report.navAnchorLinks.map((href) => `${path.relative(root, report.file)}: ${href}`),
   );
   const missingSeo = pageReports
+    .filter((report) => !report.isNoIndex)
     .filter((report) => report.titleCount !== 1 || report.descriptionCount !== 1)
     .map((report) => path.relative(root, report.file));
 

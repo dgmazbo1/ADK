@@ -8,7 +8,8 @@ This update introduces a Shopify-hybrid storefront, a working admin panel, and a
 - `server.js` — extended with content management, submissions, public form intake, and Shopify config endpoints. Auth and publish flow unchanged.
 - `data/products.json` — extracted from the inlined catalog in `store/index.html` (fallback when Shopify is not connected).
 - `data/gallery.json`, `data/shop-notes.json`, `data/settings.json` — content managed by the admin panel. Saving commits the file to the GitHub repo via the Contents API; "Publish" then triggers a Railway redeploy.
-- `lib/shopify.js` — browser-side Shopify Storefront API wrapper. Handles products, cart, and checkout. Falls back to local JSON when Shopify env vars are not set.
+- `lib/shopify-storefront.js` — server-side Shopify Storefront API client. Handles product queries, metafields, carts, checkout URLs, and local fallback.
+- `lib/shopify.js` — browser bridge that talks only to ADK public API routes. It does not expose Admin API keys or the Storefront token.
 - `admin/assets/admin.css` and `admin/assets/admin.js` — shared admin shell (topbar, sidebar, cards, forms, status pills, toast, fetch helpers).
 - `admin/index.html` — dashboard with stats and recent activity feed.
 - `admin/build-requests/index.html` — two-column inbox with status updates.
@@ -20,8 +21,8 @@ This update introduces a Shopify-hybrid storefront, a working admin panel, and a
 - `cart/index.html` — checkout button redirects to Shopify hosted checkout when configured.
 - `script.js` — build-form / contact-form submit handlers now POST to the new public API endpoints (no more "staged" placeholder).
 
-**Removed:**
-- `admin/products/`, `admin/categories/`, `admin/orders/` — Shopify owns these now (Rudy manages products in the Shopify admin / mobile app).
+**Commerce admin:**
+- `admin/products/`, `admin/categories/`, `admin/orders/` — read-only ADK views that point product, inventory, checkout, and order edits back to Shopify.
 
 ## Required Railway environment variables
 
@@ -34,7 +35,8 @@ These are already in place; no change needed:
 | Variable | Purpose |
 | --- | --- |
 | `SHOPIFY_DOMAIN` | e.g. `afterdarkkreations.myshopify.com`. Storefront target. |
-| `SHOPIFY_STOREFRONT_TOKEN` | Public Storefront API access token (designed to be browser-exposed). |
+| `SHOPIFY_STOREFRONT_TOKEN` | Storefront API access token used by the ADK server proxy. Do not expose Admin API tokens. |
+| `SHOPIFY_API_VERSION` | Storefront API version, for example `2025-01`. |
 | `SUPABASE_URL` | Submission persistence backend (build/quote requests). |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-side key for Supabase REST. |
 | `GHL_BUILD_REQUEST_WEBHOOK` | Optional GHL webhook URL — every build request is also POST-ed here. |
@@ -54,7 +56,7 @@ Without `SUPABASE_*`, submissions are kept in process memory only — they survi
    - `unauthenticated_write_checkouts`
    - `unauthenticated_read_checkouts`
 4. **Install app**, then **API credentials** → copy the **Storefront API access token**.
-5. In Railway: add `SHOPIFY_DOMAIN` (without `https://`) and `SHOPIFY_STOREFRONT_TOKEN`.
+5. In Railway: add `SHOPIFY_DOMAIN` (without `https://`), `SHOPIFY_STOREFRONT_TOKEN`, and `SHOPIFY_API_VERSION`.
 6. In Shopify: add a few real products (with variants, inventory, prices). Tag any you want featured with `featured`.
 7. Hit Publish in the ADK admin (or just push a commit) to redeploy. Refresh `/store` — products should come from Shopify.
 
@@ -89,6 +91,13 @@ create table if not exists adk_quote_requests (
   contact_phone text,
   product_id text,
   product_name text,
+  product_handle text,
+  product_url text,
+  selected_variant text,
+  vehicle text,
+  timeline text,
+  budget text,
+  attachments jsonb default '[]'::jsonb,
   message text,
   source text
 );
@@ -113,6 +122,6 @@ The dashboard sidebar shows the count of `new` items per inbox so Rudy can see a
 
 ## Notes for the Phase 2 work
 
-- Cart drawer UI: not yet built. The current `/cart` page works as-is (renders the localStorage cart) and the **Checkout** button redirects to Shopify when configured. A proper slide-in cart can be added once Rudy has tested the basic flow.
+- Cart drawer UI: not yet built. The current `/cart` page supports Shopify cart fetches, quantity updates, remove actions, and checkout redirect when Shopify is configured.
 - File uploads for build requests (photos): the form currently doesn't upload — it captures intent only. Adding S3/Cloudinary intake is a Phase 2 task once the inbox is in regular use.
-- Shopify product detail pages (`/store/[product]/`): still rendering from `window.ADK_PRODUCTS`. Same bootstrap pattern as `/store/index.html` — they'll pick up Shopify products once the env vars are set, but the URL slugs need to match Shopify product handles.
+- Shopify product detail pages (`/store/[handle]/`): server-render Shopify product metadata and JSON-LD when Shopify is configured, with local JSON fallback when it is not.

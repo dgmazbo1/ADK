@@ -44,6 +44,9 @@
     </div>
     <div class="admin-sidebar__group">
       <p class="admin-sidebar__label">Storefront</p>
+      <a class="admin-sidebar__link" href="/admin/products">Products</a>
+      <a class="admin-sidebar__link" href="/admin/categories">Categories</a>
+      <a class="admin-sidebar__link" href="/admin/orders">Orders</a>
       <a class="admin-sidebar__link" href="https://admin.shopify.com" target="_blank" rel="noopener">Shopify Admin ↗</a>
     </div>
   </aside>
@@ -97,6 +100,7 @@
       <section class="admin-card">
         <h2 class="admin-card__title">Storefront</h2>
         <p class="admin-card__sub" data-shopify-status>Checking Shopify connection…</p>
+        <div class="admin-list" data-shopify-summary></div>
         <div class="admin-main__actions">
           <a class="admin-btn admin-btn--ghost" href="https://admin.shopify.com" target="_blank" rel="noopener">Open Shopify ↗</a>
           <a class="admin-btn admin-btn--ghost" href="/store" target="_blank" rel="noopener">View Store ↗</a>
@@ -122,7 +126,7 @@
   const [builds, quotes, config] = await Promise.all([
     window.ADKAdmin.api("GET", "/api/admin/submissions/build-requests").catch(() => ({ rows: [] })),
     window.ADKAdmin.api("GET", "/api/admin/submissions/quote-requests").catch(() => ({ rows: [] })),
-    fetch("/api/public/config").then((r) => r.json()).catch(() => ({})),
+    window.ADKAdmin.api("GET", "/api/admin/shopify/status").catch(() => ({})),
   ]);
 
   const buildRows = builds.rows || [];
@@ -138,10 +142,18 @@
   document.querySelector("[data-count-quote]").textContent = quoteNew || "0";
 
   const status = document.querySelector("[data-shopify-status]");
+  const summary = document.querySelector("[data-shopify-summary]");
   if (config?.shopify?.configured) {
-    status.innerHTML = `Connected to <strong>${window.ADKAdmin.escapeHtml(config.shopify.domain)}</strong>. Manage products, inventory, and orders in the Shopify admin.`;
+    status.innerHTML = `Connected to <strong>${window.ADKAdmin.escapeHtml(config.shopify.domain)}</strong>. Manage products, inventory, orders, and checkout inside Shopify.`;
   } else {
     status.innerHTML = `Not yet connected. Once Rudy signs up for Shopify and provides a Storefront token, set <code>SHOPIFY_DOMAIN</code> and <code>SHOPIFY_STOREFRONT_TOKEN</code> in Railway env vars.`;
+  }
+  if (summary && config?.shopify) {
+    summary.innerHTML = `
+      <div class="admin-list__item" style="cursor: default;"><div class="admin-list__main"><div class="admin-list__title">Mode</div><div class="admin-list__meta"><span>${window.ADKAdmin.escapeHtml(config.shopify.mode || "local-fallback")}</span></div></div></div>
+      <div class="admin-list__item" style="cursor: default;"><div class="admin-list__main"><div class="admin-list__title">Products returned</div><div class="admin-list__meta"><span>${Number(config.shopify.productCount || 0)}</span></div></div></div>
+      <div class="admin-list__item" style="cursor: default;"><div class="admin-list__main"><div class="admin-list__title">Checkout</div><div class="admin-list__meta"><span>${config.shopify.checkoutEnabled ? "enabled through Shopify" : "disabled in fallback mode"}</span></div></div></div>
+    `;
   }
 
   const recent = [
