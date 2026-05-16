@@ -4338,11 +4338,11 @@ body {
 
 .small-button,
 .button {
-  border-color: rgba(216, 227, 243, 0.72);
+  border-color: rgba(168, 203, 229, 0.48);
   border-radius: 0.3rem;
-  background: #d8e3f3;
-  color: #09141f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #24485b, #172a38);
+  color: #f4f8fb;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
 .small-button {
@@ -4354,12 +4354,19 @@ body {
 .small-button:focus-visible,
 .button:hover,
 .button:focus-visible {
-  border-color: rgba(168, 203, 229, 0.9);
-  background: #f4f8fb;
-  color: #09141f;
+  border-color: rgba(216, 138, 40, 0.76);
+  background: linear-gradient(135deg, #315f78, #1f3b4f);
+  color: #ffffff;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 14px 36px rgba(46, 80, 102, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 14px 36px rgba(46, 80, 102, 0.32);
+}
+
+.hero--technical-bg .button,
+.feature-spotlight--dark .button {
+  border-color: rgba(168, 203, 229, 0.52);
+  background: linear-gradient(135deg, #24485b, #172a38);
+  color: #f4f8fb;
 }
 
 main {
