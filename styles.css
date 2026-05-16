@@ -4889,6 +4889,7 @@ select:focus {
 }
 
 .about-hero__image img,
+.about-founder-note img,
 .about-team__grid img {
   width: 100%;
   height: 100%;
@@ -4897,17 +4898,10 @@ select:focus {
 }
 
 .about-hero__image--main {
-  left: 7%;
-  top: 10%;
-  width: 68%;
-  height: 66%;
-}
-
-.about-hero__image--mark {
-  right: 7%;
-  bottom: 9%;
-  width: 42%;
-  height: 34%;
+  left: 8%;
+  top: 8%;
+  width: 84%;
+  height: 72%;
 }
 
 .about-hero__stamp {
@@ -4935,7 +4929,7 @@ select:focus {
 .about-hero__stamp small,
 .about-capability-strip span,
 .about-origin__timeline span,
-.about-team__note span {
+.about-founder-note span {
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 800;
@@ -4982,7 +4976,6 @@ select:focus {
 .about-origin__story,
 .about-origin__timeline,
 .about-team__card,
-.about-team__note,
 .about-standard {
   border: 1px solid rgba(216, 227, 243, 0.15);
   border-radius: 0.7rem;
@@ -5044,25 +5037,44 @@ select:focus {
   gap: 1rem;
 }
 
-.about-team__card {
+.about-team__card,
+.about-founder-note {
   display: grid;
   grid-template-columns: minmax(240px, 0.9fr) 1fr;
   overflow: hidden;
 }
 
+.about-founder-note {
+  border: 1px solid rgba(216, 227, 243, 0.15);
+  border-radius: 0.7rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    linear-gradient(rgba(168, 203, 229, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 203, 229, 0.035) 1px, transparent 1px),
+    rgba(11, 22, 33, 0.68);
+  background-size: auto, 34px 34px, 34px 34px, auto;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 70px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+.about-team--single .section-heading {
+  margin-bottom: 1rem;
+}
+
 .about-team__card figure,
-.about-team__note figure {
+.about-founder-note figure {
   min-height: 390px;
   margin: 0;
   overflow: hidden;
 }
 
 .about-team__card > div,
-.about-team__note > div {
+.about-founder-note > div {
   padding: clamp(1rem, 3vw, 1.6rem);
 }
 
-.about-team__card ul {
+.about-team__card ul,
+.about-founder-note ul {
   display: grid;
   gap: 0.5rem;
   margin: 1.2rem 0 0;
@@ -5070,21 +5082,12 @@ select:focus {
   list-style: none;
 }
 
-.about-team__card li {
+.about-team__card li,
+.about-founder-note li {
   padding-top: 0.55rem;
   border-top: 1px solid rgba(216, 227, 243, 0.12);
   color: rgba(216, 227, 243, 0.72);
   font-size: 0.88rem;
-}
-
-.about-team__note {
-  display: grid;
-  align-content: start;
-  overflow: hidden;
-}
-
-.about-team__note span {
-  color: var(--amber);
 }
 
 .about-standard {
@@ -5132,6 +5135,10 @@ select:focus {
 
   .about-team__card {
     grid-template-columns: 1fr;
+  }
+
+  .about-founder-note {
+    grid-template-columns: minmax(220px, 0.58fr) 1fr;
   }
 }
 
@@ -5184,14 +5191,7 @@ select:focus {
     left: 6%;
     top: 7%;
     width: 88%;
-    height: 52%;
-  }
-
-  .about-hero__image--mark {
-    right: 6%;
-    bottom: 9%;
-    width: 62%;
-    height: 28%;
+    height: 68%;
   }
 
   .about-hero__stamp {
@@ -5207,7 +5207,11 @@ select:focus {
   }
 
   .about-team__card figure,
-  .about-team__note figure {
+  .about-founder-note figure {
     min-height: 310px;
+  }
+
+  .about-founder-note {
+    grid-template-columns: 1fr;
   }
 }
