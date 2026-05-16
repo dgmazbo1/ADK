@@ -243,7 +243,7 @@ function renderStoreProductPage(product, request) {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles.css?v=20260502-industrial-cinema-1" />
+    <link rel="stylesheet" href="/styles.css?v=20260516-about-story-1" />
     ${product ? `<script type="application/ld+json">${productJsonLd(product, request)}</script>` : ""}
   </head>
   <body>
@@ -274,8 +274,8 @@ function renderStoreProductPage(product, request) {
     </main>
     <footer class="site-footer footer-seven" id="footer"><div class="footer-seven__container"><div class="footer-seven__top"><div class="footer-seven__brand"><div class="footer-seven__logo-row"><a href="/"><img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="After Dark Kreations ADK logo" /></a><h2>After Dark Kreations</h2></div><p>American-made welding, CAD-supported fabrication, truck parts, trailer repair, air ride, hydraulics, overland accessories, and one-off metalwork built in Henderson, Nevada.</p></div><div class="footer-seven__sections"><div><h3>Contact</h3><ul><li><a href="tel:+17028109021">(702) 810-9021</a></li><li><a href="mailto:Rudy@AfterDarkKreations.com">Rudy@AfterDarkKreations.com</a></li><li><a href="https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011">2053 Pabco Rd, Henderson, NV 89011</a></li></ul></div><div><h3>Store</h3><ul><li><a href="/store">ADK Store</a></li><li><a href="/cart">Cart</a></li><li><a href="/build-request">Request Quote</a></li></ul></div></div></div><div class="footer-seven__bottom"><p>© 2026 After Dark Kreations / ADK. Proudly Made in America.</p></div></div></footer>
     ${dataScript}
-    <script src="/lib/shopify.js?v=20260502-industrial-cinema-1" defer></script>
-    <script src="/script.js?v=20260502-industrial-cinema-1" defer></script>
+    <script src="/lib/shopify.js?v=20260516-about-story-1" defer></script>
+    <script src="/script.js?v=20260516-about-story-1" defer></script>
   </body>
 </html>`;
 }
