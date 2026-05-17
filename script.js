@@ -84,8 +84,16 @@ function setHeaderState() {
   header?.classList.toggle("is-condensed", window.scrollY > 18);
 }
 
+function setMobileMenuOffset() {
+  if (!header) return;
+  const bottom = header.getBoundingClientRect().bottom + 8;
+  document.documentElement.style.setProperty("--mobile-menu-top", `${Math.max(72, Math.round(bottom))}px`);
+}
+
 setHeaderState();
+setMobileMenuOffset();
 window.addEventListener("scroll", setHeaderState, { passive: true });
+window.addEventListener("resize", setMobileMenuOffset, { passive: true });
 
 function closeNavDropdowns(exceptGroup) {
   navDropdowns.forEach((group) => {
@@ -137,6 +145,7 @@ if (menuToggle && siteNav && headerContact) {
     siteNav.classList.toggle("is-open", !isOpen);
     headerContact.classList.toggle("is-open", !isOpen);
     document.body.classList.toggle("menu-open", !isOpen);
+    setMobileMenuOffset();
     if (isOpen) closeNavDropdowns();
   });
 
@@ -158,11 +167,22 @@ if (siteNav) {
     "/capabilities": "nav-capabilities-panel",
     "/store": "nav-store-panel",
     "/shop-work": "nav-work-panel",
+    "/blog": "nav-resources-panel",
+    "/about": "nav-resources-panel",
+    "/contact": "nav-resources-panel",
   };
   const activeDropdownTrigger = dropdownControlByPath[currentPath]
     ? siteNav.querySelector(`[aria-controls="${dropdownControlByPath[currentPath]}"]`)
     : null;
+  const activeStoreTrigger = currentPath.startsWith("/store/")
+    ? siteNav.querySelector(`[aria-controls="nav-store-panel"]`)
+    : null;
+  const activeBlogTrigger = currentPath.startsWith("/blog/")
+    ? siteNav.querySelector(`[aria-controls="nav-resources-panel"]`)
+    : null;
   activeDropdownTrigger?.setAttribute("aria-current", "page");
+  activeStoreTrigger?.setAttribute("aria-current", "page");
+  activeBlogTrigger?.setAttribute("aria-current", "page");
 }
 
 function openBuildModal(trigger) {
