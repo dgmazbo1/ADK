@@ -4638,27 +4638,6 @@ select:focus {
   }
 }
 
-@media (max-width: 760px) {
-  .patriot-scroll span {
-    min-height: 28px;
-    padding: 0 1rem;
-    font-size: 0.54rem;
-  }
-
-  .origin-line a {
-    min-height: 28px;
-    padding-inline: 0.72rem;
-  }
-
-  .services-rendered {
-    margin-top: -3.2rem;
-  }
-
-  .services-rendered p {
-    width: calc(100vw - 1rem);
-  }
-}
-
 /* Industrial Cinema layer from the supplied redesign package.
    The patriotic top banner and ADK logo markup are intentionally preserved. */
 :root {
@@ -6387,82 +6366,105 @@ main {
   }
 }
 
-/* Final premium top rail override.
-   This intentionally sits last so older visual layers cannot re-clutter it. */
+/* True final restore: original full-width Made in America marquee. */
 .top-system {
-  display: grid;
-  grid-template-columns: minmax(14rem, 0.82fr) auto;
-  align-items: center;
-  gap: clamp(0.6rem, 2vw, 1.2rem);
-  padding: 0.36rem max(0.75rem, calc((100vw - 1220px) / 2));
-  border-bottom: 1px solid rgba(230, 238, 246, 0.09);
-  background:
-    linear-gradient(90deg, rgba(4, 11, 18, 0.94), rgba(11, 22, 33, 0.84)),
-    rgba(4, 11, 18, 0.8);
-  box-shadow:
-    inset 0 -1px 0 rgba(255, 255, 255, 0.045),
-    0 14px 44px rgba(0, 0, 0, 0.2);
+  display: block;
+  padding: 0;
+  background: rgba(244, 241, 234, 0.94);
+  border-bottom: 1px solid var(--line);
+  box-shadow: none;
+  backdrop-filter: blur(18px);
 }
 
 .patriot-scroll {
+  width: 100%;
+  max-width: none;
   min-width: 0;
-  max-width: min(42rem, 55vw);
-  border: 1px solid rgba(230, 238, 246, 0.105);
-  border-radius: 999px;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 2px solid #7737e0;
   background:
-    linear-gradient(90deg, rgba(168, 212, 240, 0.12), rgba(230, 238, 246, 0.035), rgba(216, 138, 40, 0.1)),
-    rgba(255, 255, 255, 0.035);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.065);
+    radial-gradient(circle at 12% 0, rgba(119, 55, 224, 0.22), transparent 24rem),
+    linear-gradient(90deg, #140322, #1a062c 48%, #12021d);
+  box-shadow: none;
+}
+
+.patriot-scroll::before {
+  content: none;
 }
 
 .patriot-scroll__track {
-  animation-duration: 42s;
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
 }
 
 .patriot-scroll span {
-  min-height: 30px;
-  padding: 0 1.35rem;
-  color: rgba(230, 238, 246, 0.78);
-  font-size: 0.59rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-}
-
-.patriot-scroll span::after {
-  content: "";
-  width: 0.28rem;
-  height: 0.28rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--blueprint), var(--amber));
-  opacity: 0.82;
-}
-
-.origin-line {
-  justify-content: flex-end;
-  gap: 0.45rem;
-  padding: 0;
-  color: rgba(230, 238, 246, 0.62);
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
-}
-
-.origin-line a {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 0 0.78rem;
-  border: 1px solid rgba(230, 238, 246, 0.09);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.035);
+  gap: 1.45rem;
+  min-height: 39px;
+  padding: 0 2.2rem;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.origin-line a:nth-child(2) {
-  display: none;
+.patriot-scroll span::after {
+  content: "🇺🇸";
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  font-size: 1rem;
+  letter-spacing: 0;
+  opacity: 1;
+  filter: saturate(0.95);
+}
+
+.origin-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: 0.48rem 1rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.origin-line a {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  white-space: normal;
+}
+
+.origin-line a:nth-child(2),
+.origin-line a:nth-child(3) {
+  display: inline;
+}
+
+.origin-line a:hover,
+.origin-line a:focus-visible {
+  color: var(--blueprint);
 }
 
 .site-header {
-  top: 3.92rem;
+  top: 5.55rem;
 }
 
 .services-rendered {
@@ -6475,26 +6477,27 @@ main {
   border-radius: 0;
 }
 
-@media (max-width: 900px) {
-  .top-system {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-    padding-inline: 0.5rem;
-  }
-
-  .patriot-scroll {
-    max-width: none;
-  }
-
+@media (max-width: 760px) {
   .origin-line {
-    justify-content: center;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: center;
+    text-align: center;
   }
 
-  .origin-line a:nth-child(3) {
-    display: none;
+  .origin-line a {
+    min-height: 0;
+    padding: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .patriot-scroll span {
+    min-height: 32px;
+    padding: 0 1.25rem;
+    font-size: 0.6rem;
   }
 
   .site-header {
-    top: 5.2rem;
+    top: 6.75rem;
   }
 }
