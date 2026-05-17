@@ -4486,6 +4486,179 @@ select:focus {
   }
 }
 
+/* Premium top rail refinement: quieter, less cluttered, and full-bleed service marquee. */
+.top-system {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.82fr) auto;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.2rem);
+  padding: 0.36rem max(0.75rem, calc((100vw - 1220px) / 2));
+  border-bottom: 1px solid rgba(230, 238, 246, 0.09);
+  background:
+    linear-gradient(90deg, rgba(4, 11, 18, 0.92), rgba(11, 22, 33, 0.82)),
+    rgba(4, 11, 18, 0.78);
+  box-shadow:
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045),
+    0 14px 44px rgba(0, 0, 0, 0.2);
+}
+
+.patriot-scroll {
+  min-width: 0;
+  max-width: min(42rem, 55vw);
+  border: 1px solid rgba(230, 238, 246, 0.105);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(168, 212, 240, 0.12), rgba(230, 238, 246, 0.035), rgba(216, 138, 40, 0.10)),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.065);
+}
+
+.patriot-scroll__track {
+  animation-duration: 42s;
+}
+
+.patriot-scroll span {
+  min-height: 30px;
+  padding: 0 1.35rem;
+  color: rgba(230, 238, 246, 0.78);
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.patriot-scroll span::after {
+  content: "";
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blueprint), var(--amber));
+  opacity: 0.82;
+}
+
+.origin-line {
+  justify-content: flex-end;
+  gap: 0.45rem;
+  padding: 0;
+  color: rgba(230, 238, 246, 0.62);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.origin-line a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.78rem;
+  border: 1px solid rgba(230, 238, 246, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  white-space: nowrap;
+  transition:
+    color 650ms var(--premium-ease),
+    background 650ms var(--premium-ease),
+    border-color 650ms var(--premium-ease),
+    transform 650ms var(--premium-ease);
+}
+
+.origin-line a:nth-child(2) {
+  display: none;
+}
+
+.origin-line a:hover,
+.origin-line a:focus-visible {
+  color: #f7fbff;
+  border-color: rgba(168, 212, 240, 0.26);
+  background: rgba(168, 212, 240, 0.075);
+  transform: translateY(-1px);
+}
+
+.site-header {
+  top: 3.92rem;
+}
+
+.services-rendered {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: -4.25rem;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(90deg, rgba(168, 212, 240, 0.11), rgba(4, 11, 18, 0.96) 18%, rgba(11, 22, 33, 0.94) 72%, rgba(216, 138, 40, 0.11)),
+    #07111b;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.services-rendered p {
+  width: min(1220px, calc(100vw - 2rem));
+  margin-inline: auto;
+  padding-top: 0.64rem;
+}
+
+.services-rendered__rail {
+  animation-duration: 58s;
+}
+
+.services-rendered span {
+  padding: 0.64rem 1.72rem;
+  color: rgba(230, 238, 246, 0.72);
+  letter-spacing: 0.13em;
+}
+
+.services-rendered span::after {
+  background: linear-gradient(135deg, var(--blueprint), var(--amber));
+  opacity: 0.72;
+}
+
+@media (max-width: 900px) {
+  .top-system {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding-inline: 0.5rem;
+  }
+
+  .patriot-scroll {
+    max-width: none;
+  }
+
+  .origin-line {
+    justify-content: center;
+  }
+
+  .origin-line a:nth-child(3) {
+    display: none;
+  }
+
+  .site-header {
+    top: 5.2rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .patriot-scroll span {
+    min-height: 28px;
+    padding: 0 1rem;
+    font-size: 0.54rem;
+  }
+
+  .origin-line a {
+    min-height: 28px;
+    padding-inline: 0.72rem;
+  }
+
+  .services-rendered {
+    margin-top: -3.2rem;
+  }
+
+  .services-rendered p {
+    width: calc(100vw - 1rem);
+  }
+}
+
 /* Industrial Cinema layer from the supplied redesign package.
    The patriotic top banner and ADK logo markup are intentionally preserved. */
 :root {
@@ -5575,6 +5748,118 @@ select:focus {
   }
 }
 
+/* Final premium top rail override.
+   This intentionally sits last so older visual layers cannot re-clutter it. */
+.top-system {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.82fr) auto;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.2rem);
+  padding: 0.36rem max(0.75rem, calc((100vw - 1220px) / 2));
+  border-bottom: 1px solid rgba(230, 238, 246, 0.09);
+  background:
+    linear-gradient(90deg, rgba(4, 11, 18, 0.94), rgba(11, 22, 33, 0.84)),
+    rgba(4, 11, 18, 0.8);
+  box-shadow:
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045),
+    0 14px 44px rgba(0, 0, 0, 0.2);
+}
+
+.patriot-scroll {
+  min-width: 0;
+  max-width: min(42rem, 55vw);
+  border: 1px solid rgba(230, 238, 246, 0.105);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(168, 212, 240, 0.12), rgba(230, 238, 246, 0.035), rgba(216, 138, 40, 0.1)),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.065);
+}
+
+.patriot-scroll__track {
+  animation-duration: 42s;
+}
+
+.patriot-scroll span {
+  min-height: 30px;
+  padding: 0 1.35rem;
+  color: rgba(230, 238, 246, 0.78);
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.patriot-scroll span::after {
+  content: "";
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blueprint), var(--amber));
+  opacity: 0.82;
+}
+
+.origin-line {
+  justify-content: flex-end;
+  gap: 0.45rem;
+  padding: 0;
+  color: rgba(230, 238, 246, 0.62);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.origin-line a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.78rem;
+  border: 1px solid rgba(230, 238, 246, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  white-space: nowrap;
+}
+
+.origin-line a:nth-child(2) {
+  display: none;
+}
+
+.site-header {
+  top: 3.92rem;
+}
+
+.services-rendered {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 900px) {
+  .top-system {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding-inline: 0.5rem;
+  }
+
+  .patriot-scroll {
+    max-width: none;
+  }
+
+  .origin-line {
+    justify-content: center;
+  }
+
+  .origin-line a:nth-child(3) {
+    display: none;
+  }
+
+  .site-header {
+    top: 5.2rem;
+  }
+}
+
 /* High-end agency visual system layer.
    Keeps ADK's technical fabrication direction while upgrading the interface
    into a floating, machined, editorial product-lab experience. */
@@ -6094,5 +6379,117 @@ main {
   .button {
     width: 100%;
     justify-content: space-between;
+  }
+}
+
+/* Final premium top rail override.
+   This intentionally sits last so older visual layers cannot re-clutter it. */
+.top-system {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.82fr) auto;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.2rem);
+  padding: 0.36rem max(0.75rem, calc((100vw - 1220px) / 2));
+  border-bottom: 1px solid rgba(230, 238, 246, 0.09);
+  background:
+    linear-gradient(90deg, rgba(4, 11, 18, 0.94), rgba(11, 22, 33, 0.84)),
+    rgba(4, 11, 18, 0.8);
+  box-shadow:
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045),
+    0 14px 44px rgba(0, 0, 0, 0.2);
+}
+
+.patriot-scroll {
+  min-width: 0;
+  max-width: min(42rem, 55vw);
+  border: 1px solid rgba(230, 238, 246, 0.105);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(168, 212, 240, 0.12), rgba(230, 238, 246, 0.035), rgba(216, 138, 40, 0.1)),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.065);
+}
+
+.patriot-scroll__track {
+  animation-duration: 42s;
+}
+
+.patriot-scroll span {
+  min-height: 30px;
+  padding: 0 1.35rem;
+  color: rgba(230, 238, 246, 0.78);
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.patriot-scroll span::after {
+  content: "";
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blueprint), var(--amber));
+  opacity: 0.82;
+}
+
+.origin-line {
+  justify-content: flex-end;
+  gap: 0.45rem;
+  padding: 0;
+  color: rgba(230, 238, 246, 0.62);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.origin-line a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 0.78rem;
+  border: 1px solid rgba(230, 238, 246, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  white-space: nowrap;
+}
+
+.origin-line a:nth-child(2) {
+  display: none;
+}
+
+.site-header {
+  top: 3.92rem;
+}
+
+.services-rendered {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 900px) {
+  .top-system {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding-inline: 0.5rem;
+  }
+
+  .patriot-scroll {
+    max-width: none;
+  }
+
+  .origin-line {
+    justify-content: center;
+  }
+
+  .origin-line a:nth-child(3) {
+    display: none;
+  }
+
+  .site-header {
+    top: 5.2rem;
   }
 }
