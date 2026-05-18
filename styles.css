@@ -7470,12 +7470,7 @@ main {
 }
 
 .capability-materials .material-swatch {
-  display: block;
-  width: min(18rem, 100%);
-  height: 0.42rem;
-  margin-bottom: 1rem;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--blueprint), var(--amber));
+  display: none;
 }
 
 .capability-materials .material-readout h3 {
@@ -7724,8 +7719,7 @@ main {
 }
 
 .capability-materials .material-swatch {
-  width: min(13rem, 100%);
-  margin-bottom: 0.9rem;
+  display: none;
 }
 
 .capability-materials .material-readout h3 {
