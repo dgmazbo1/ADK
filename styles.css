@@ -7822,3 +7822,234 @@ main {
     min-height: 0;
   }
 }
+
+/* Site-wide responsive formatting guardrails. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  overflow-wrap: break-word;
+}
+
+.adk-navbar,
+.site-header,
+.site-footer,
+.section,
+.feature-runway,
+.capabilities-modern .section {
+  max-width: calc(100vw - 2rem);
+}
+
+.brand span,
+.adk-navbar__brand span {
+  min-width: 0;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.feature-spotlight,
+.feature-spotlight--reverse,
+.feature-spotlight:nth-child(1),
+.feature-spotlight:nth-child(4) {
+  min-height: auto;
+  overflow: visible;
+}
+
+.feature-spotlight__copy {
+  min-width: 0;
+}
+
+.feature-spotlight__copy h2,
+.feature-spotlight__copy p:not(.eyebrow) {
+  max-width: min(100%, 40rem);
+  overflow-wrap: break-word;
+}
+
+.feature-spotlight__media {
+  align-self: stretch;
+}
+
+.feature-spotlight::after,
+.masonry figure::before {
+  display: none;
+}
+
+.masonry figure {
+  overflow: hidden;
+}
+
+.masonry figcaption {
+  min-width: 0;
+  max-width: calc(100% - 1.6rem);
+}
+
+.masonry span,
+.masonry small {
+  display: block;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.capability-hero {
+  overflow: visible;
+}
+
+.capability-hero__copy,
+.capability-hero__panel,
+.capability-card,
+.material-shop,
+.material-readout,
+.material-readout__content,
+.capability-cta {
+  min-width: 0;
+}
+
+.capability-hero h1,
+.capability-system__intro h2,
+.capability-process h2,
+.capability-materials h2,
+.capability-cta h2,
+.capability-card h3,
+.capability-materials .material-readout h3 {
+  overflow: visible;
+  overflow-wrap: break-word;
+}
+
+.material-tabs {
+  min-width: 0;
+}
+
+.material-tabs button,
+.store-category-tabs button,
+.store-filter-chips button,
+.portfolio-filters button {
+  white-space: normal;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .adk-navbar__nav {
+    right: 0.5rem;
+    left: 0.5rem;
+    width: auto;
+    max-width: calc(100vw - 1rem);
+    padding-inline: 1rem;
+  }
+
+  .adk-navbar .nav-dropdown-group,
+  .adk-mobile-menu__group,
+  .adk-navbar .nav-link,
+  .adk-mega-menu a {
+    max-width: 100%;
+  }
+
+  .adk-mega-menu a span,
+  .adk-navbar .nav-link {
+    overflow-wrap: break-word;
+  }
+}
+
+@media (max-width: 760px) {
+  .feature-runway,
+  .feature-spotlight,
+  .feature-spotlight--reverse,
+  .feature-spotlight:nth-child(1),
+  .feature-spotlight:nth-child(4) {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-spotlight {
+    padding: 1rem;
+  }
+
+  .feature-spotlight__media {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .feature-spotlight__media img {
+    min-height: 0;
+  }
+
+  .store-category-tabs,
+  .store-filter-chips,
+  .portfolio-filters,
+  .material-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-wrap: wrap;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+
+  .store-category-tabs button,
+  .store-filter-chips button,
+  .portfolio-filters button,
+  .material-tabs button {
+    flex: 1 1 min(10.5rem, 100%);
+    min-width: 0;
+  }
+
+  .capability-hero {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .capability-hero h1 {
+    line-height: 1.02;
+  }
+
+  .capability-hero__copy {
+    padding-top: 2.5rem;
+  }
+
+  .capability-hero__panel {
+    min-height: 14rem;
+  }
+
+  .material-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .masonry figcaption {
+    right: 0.6rem;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    max-width: calc(100% - 1.2rem);
+  }
+}
+
+.contact-card .button,
+.request .button,
+button.button,
+.button {
+  overflow: visible;
+}
+
+.contact-card button.button,
+.contact-card .button.line-button,
+button.button.line-button {
+  min-width: max-content;
+  padding-right: max(1rem, 1.2em);
+  padding-left: max(1rem, 1.2em);
+}
+
+.capabilities-modern .capability-hero__panel {
+  height: auto !important;
+  min-height: 14rem !important;
+  overflow: visible !important;
+}
+
+@media (max-width: 760px) {
+  .contact-card .button,
+  .request .button,
+  button.button {
+    width: auto;
+    min-width: max-content;
+  }
+}
