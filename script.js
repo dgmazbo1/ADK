@@ -591,6 +591,8 @@ const materialData = {
     process: "Fit-up, weld access, load path, and finish prep all matter.",
     consideration: "Strength is only useful when the part also fits and can be serviced.",
     capability: "Cut, weld, reinforce, mock up, test fit, and finish.",
+    image: "/assets/materials/steel-fabrication-coupon.jpg",
+    alt: "Steel fabrication coupon on a dark ADK-style workbench",
   },
   stainless: {
     label: "Stainless",
@@ -599,6 +601,8 @@ const materialData = {
     process: "Clean prep, controlled heat, and finish discipline keep the work clean.",
     consideration: "Contamination and poor heat control show quickly on stainless.",
     capability: "TIG welding, fit-up, detail fabrication, and tank-related work.",
+    image: "/assets/materials/stainless-fabrication-plate.jpg",
+    alt: "Brushed stainless steel fabrication plate on a dark workbench",
   },
   aluminum: {
     label: "Aluminum",
@@ -607,6 +611,8 @@ const materialData = {
     process: "Clean prep, proper heat control, and the right welding process are critical.",
     consideration: "Fit-up and cleanliness matter before the arc starts.",
     capability: "Aluminum fabrication, TIG welding, tanks, brackets, and custom components.",
+    image: "/assets/materials/aluminum-bracket-blank.jpg",
+    alt: "Aluminum fabricated bracket blank with pilot holes on a workbench",
   },
   titanium: {
     label: "Titanium",
@@ -615,6 +621,8 @@ const materialData = {
     process: "Clean handling, controlled heat, and shielding discipline are required.",
     consideration: "Titanium rewards process control and punishes shortcuts.",
     capability: "Specialty TIG work and controlled fabrication planning.",
+    image: "/assets/materials/titanium-fabrication-sample.jpg",
+    alt: "Titanium fabrication sample with subtle heat tint on a workbench",
   },
   magnesium: {
     label: "Magnesium",
@@ -623,11 +631,14 @@ const materialData = {
     process: "Material identification, careful prep, and process control come first.",
     consideration: "Not every project is a fit. ADK reviews the job before committing.",
     capability: "Specialty fabrication review, welding support, and process planning.",
+    image: "/assets/materials/magnesium-alloy-sample.jpg",
+    alt: "Magnesium alloy fabrication sample on a dark workbench",
   },
 };
 
 const materialTabs = document.querySelectorAll("button[data-material]");
 const materialSwatch = document.querySelector("[data-swatch]");
+const materialImage = document.querySelector("[data-material-image]");
 
 function setMaterial(key) {
   const material = materialData[key];
@@ -641,6 +652,12 @@ function setMaterial(key) {
     materialSwatch.className = `material-swatch ${key}`;
   }
 
+  if (materialImage && material.image) {
+    materialImage.classList.remove("is-loaded");
+    materialImage.src = material.image;
+    materialImage.alt = material.alt || `${material.label} fabrication material sample`;
+  }
+
   document.querySelector("[data-material-label]").textContent = material.label;
   document.querySelector("[data-material-title]").textContent = material.title;
   document.querySelector("[data-material-use]").textContent = material.use;
@@ -652,6 +669,11 @@ function setMaterial(key) {
 materialTabs.forEach((tab) => {
   tab.addEventListener("click", () => setMaterial(tab.dataset.material));
 });
+
+if (materialImage) {
+  materialImage.addEventListener("load", () => materialImage.classList.add("is-loaded"));
+  if (materialImage.complete) materialImage.classList.add("is-loaded");
+}
 
 function renderGallery(activeFilter = "all") {
   const galleryGrid = document.querySelector("[data-gallery-grid]");
