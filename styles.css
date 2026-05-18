@@ -7394,20 +7394,20 @@ main {
 
 .material-readout {
   display: grid;
-  grid-template-columns: minmax(15rem, 0.86fr) minmax(0, 1fr);
-  gap: clamp(1rem, 3vw, 1.6rem);
-  align-items: stretch;
-  padding: 0.8rem;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: start;
+  padding: 0;
 }
 
 .material-readout__visual {
   position: relative;
-  min-height: 100%;
   margin: 0;
   overflow: hidden;
-  border: 1px solid rgba(216, 227, 243, 0.11);
-  border-radius: 1rem;
+  border-bottom: 1px solid rgba(216, 227, 243, 0.12);
+  border-radius: 1.35rem 1.35rem 0 0;
   background: rgba(4, 11, 18, 0.5);
+  aspect-ratio: 16 / 9;
 }
 
 .material-readout__visual::after {
@@ -7425,10 +7425,9 @@ main {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 25rem;
   object-fit: cover;
-  opacity: 0;
-  transform: scale(1.025);
+  opacity: 1;
+  transform: scale(1);
   transition:
     opacity 260ms ease,
     transform 520ms ease;
@@ -7441,7 +7440,7 @@ main {
 
 .material-readout__content {
   min-width: 0;
-  padding: clamp(1rem, 3vw, 1.55rem);
+  padding: clamp(1.15rem, 3vw, 2rem);
 }
 
 .material-tabs {
@@ -7477,39 +7476,44 @@ main {
 
 .capability-materials .material-swatch {
   display: block;
-  width: 100%;
+  width: min(18rem, 100%);
   height: 0.42rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--blueprint), var(--amber));
 }
 
 .capability-materials .material-readout h3 {
   margin-top: 0.3rem;
-  max-width: 12.5ch;
+  max-width: 18ch;
   color: #f7fbff;
-  font-size: clamp(1.45rem, 2.4vw, 2.15rem);
+  font-size: clamp(1.6rem, 2.6vw, 2.45rem);
   letter-spacing: -0.03em;
-  line-height: 1.04;
+  line-height: 1.08;
   text-wrap: balance;
 }
 
 .capability-materials .material-table {
-  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.45rem;
 }
 
 .capability-materials .material-table div {
-  display: grid;
-  grid-template-columns: minmax(7.5rem, 0.42fr) minmax(0, 1fr);
-  gap: 0.85rem;
-  padding: 0.78rem 0;
-  border-top: 1px solid rgba(216, 227, 243, 0.1);
+  display: block;
+  min-width: 0;
+  padding: 0.85rem;
+  border: 1px solid rgba(216, 227, 243, 0.1);
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .capability-materials .material-table dt {
+  margin-bottom: 0.42rem;
   color: rgba(168, 203, 229, 0.72);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -7517,8 +7521,9 @@ main {
 .capability-materials .material-table dd {
   margin: 0;
   color: rgba(216, 227, 243, 0.76);
-  line-height: 1.55;
-  overflow-wrap: anywhere;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
 }
 
 .capability-cta {
@@ -7643,5 +7648,193 @@ main {
 
   .capability-cta .button {
     width: 100%;
+  }
+}
+
+/* High-end capabilities material rebuild: double-bezel panel, clearer hierarchy. */
+.capability-materials {
+  width: min(1260px, calc(100vw - 2rem));
+}
+
+.material-shop {
+  position: relative;
+  grid-template-columns: minmax(17rem, 0.7fr) minmax(0, 1.3fr);
+  padding: clamp(0.65rem, 1.5vw, 0.9rem);
+  border: 1px solid rgba(216, 227, 243, 0.13);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(47, 141, 170, 0.18), transparent 17rem),
+    radial-gradient(circle at 92% 88%, rgba(216, 138, 40, 0.13), transparent 18rem),
+    rgba(5, 13, 22, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 32px 100px rgba(5, 15, 26, 0.22);
+}
+
+.material-shop::before {
+  content: "";
+  position: absolute;
+  inset: 0.65rem;
+  pointer-events: none;
+  border: 1px solid rgba(168, 203, 229, 0.08);
+  border-radius: 1.45rem;
+}
+
+.material-shop__copy,
+.material-readout {
+  border-radius: 1.45rem;
+  background:
+    linear-gradient(rgba(168, 203, 229, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 203, 229, 0.03) 1px, transparent 1px),
+    rgba(8, 18, 30, 0.8);
+  background-size: 36px 36px;
+}
+
+.material-shop__copy {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(2rem, 5vw, 4rem);
+  padding: clamp(1.45rem, 4vw, 2.8rem);
+}
+
+.material-shop__copy h2 {
+  max-width: 9.5ch;
+}
+
+.material-tabs {
+  margin-top: 0;
+}
+
+.material-readout {
+  display: grid;
+  grid-template-rows: minmax(18rem, 0.82fr) auto;
+  overflow: hidden;
+  padding: 0.55rem;
+}
+
+.material-readout__visual {
+  min-height: 18rem;
+  border: 1px solid rgba(216, 227, 243, 0.1);
+  border-radius: 1.05rem;
+  aspect-ratio: 16 / 8.5;
+}
+
+.material-readout__visual img {
+  transform-origin: 50% 58%;
+}
+
+.material-readout__content {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 1.6rem);
+  align-items: start;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+}
+
+.capability-materials .material-swatch {
+  width: min(13rem, 100%);
+  margin-bottom: 0.9rem;
+}
+
+.capability-materials .material-readout h3 {
+  max-width: 15ch;
+  margin-bottom: 0;
+  font-size: clamp(1.7rem, 3vw, 2.65rem);
+}
+
+.capability-materials .material-table {
+  margin-top: 0;
+  align-self: stretch;
+}
+
+.capability-materials .material-table div {
+  min-height: 7rem;
+  padding: 0.95rem;
+}
+
+.capability-materials .material-table dd {
+  font-size: clamp(0.86rem, 1vw, 0.95rem);
+}
+
+@media (max-width: 1020px) {
+  .material-shop {
+    grid-template-columns: 1fr;
+  }
+
+  .material-shop__copy h2 {
+    max-width: 12ch;
+  }
+
+  .material-readout__content {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-materials .material-readout h3 {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .capability-materials {
+    width: min(100% - 1rem, 1260px);
+  }
+
+  .material-shop {
+    padding: 0.45rem;
+    border-radius: 1.35rem;
+  }
+
+  .material-shop::before {
+    display: none;
+  }
+
+  .material-shop__copy,
+  .material-readout {
+    border-radius: 1rem;
+  }
+
+  .material-shop__copy {
+    padding: 1.15rem;
+    gap: 1.7rem;
+  }
+
+  .material-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .material-tabs button {
+    min-height: 2.6rem;
+    justify-content: center;
+  }
+
+  .material-readout {
+    grid-template-rows: auto auto;
+    padding: 0.45rem;
+  }
+
+  .material-readout__visual {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: 0.82rem;
+  }
+
+  .material-readout__visual img {
+    min-height: 0;
+    max-height: none;
+  }
+
+  .material-readout__content {
+    padding: 1rem;
+  }
+
+  .capability-materials .material-table {
+    grid-template-columns: 1fr;
+  }
+
+  .capability-materials .material-table div {
+    min-height: 0;
   }
 }

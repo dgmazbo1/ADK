@@ -639,6 +639,10 @@ const materialData = {
 const materialTabs = document.querySelectorAll("button[data-material]");
 const materialSwatch = document.querySelector("[data-swatch]");
 const materialImage = document.querySelector("[data-material-image]");
+const materialAssetPath = (path) => {
+  if (window.location.protocol !== "file:") return path;
+  return path.replace(/^\/assets\//, "../assets/");
+};
 
 function setMaterial(key) {
   const material = materialData[key];
@@ -654,7 +658,7 @@ function setMaterial(key) {
 
   if (materialImage && material.image) {
     materialImage.classList.remove("is-loaded");
-    materialImage.src = material.image;
+    materialImage.src = materialAssetPath(material.image);
     materialImage.alt = material.alt || `${material.label} fabrication material sample`;
   }
 
