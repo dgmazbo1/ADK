@@ -120,6 +120,7 @@ function sendHtml(response, statusCode, html, headers = {}) {
   response.writeHead(statusCode, {
     "Content-Type": "text/html; charset=utf-8",
     "Cache-Control": "public, max-age=120",
+    ...baseSecurityHeaders(),
     ...headers,
   });
   response.end(html);
@@ -127,6 +128,8 @@ function sendHtml(response, statusCode, html, headers = {}) {
 
 function baseSecurityHeaders() {
   return {
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' https: data:; media-src 'self' https:; connect-src 'self' https:; frame-src https://www.google.com https://www.google.com/maps/; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), payment=()",
@@ -200,6 +203,17 @@ function normalizeLocalProduct(product) {
 
 function productJsonLd(product, request) {
   const url = `${publicOrigin(request)}/store/${product.handle || product.slug}`;
+  const properties = [
+    ["Fitment", product.fitment],
+    ["Material", product.material],
+    ["Lead time", product.leadTime],
+    ["Vehicle application", product.vehicleApplication],
+    ["Build notes", product.buildNotes],
+  ].filter(([, value]) => value).map(([name, value]) => ({
+    "@type": "PropertyValue",
+    name,
+    value: String(value),
+  }));
   const schema = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -208,6 +222,9 @@ function productJsonLd(product, request) {
     description: product.description || product.shortDescription || "",
     brand: { "@type": "Brand", name: "After Dark Kreations" },
     manufacturer: { "@type": "Organization", name: "After Dark Kreations" },
+    category: product.category || product.productType || "",
+    sku: product.id || product.handle || product.slug,
+    additionalProperty: properties,
     url,
   };
   if (!product.requestPricing && typeof product.price === "number") {
@@ -220,6 +237,19 @@ function productJsonLd(product, request) {
     };
   }
   return JSON.stringify(schema);
+}
+
+function breadcrumbJsonLd(items, request) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: `${publicOrigin(request)}${item.path}`,
+    })),
+  });
 }
 
 function renderStoreProductPage(product, request) {
@@ -243,8 +273,8 @@ function renderStoreProductPage(product, request) {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles.css?v=20260518-dark-sections-1" />
-    ${product ? `<script type="application/ld+json">${productJsonLd(product, request)}</script>` : ""}
+    <link rel="stylesheet" href="/styles.css?v=20260606-competitor-upgrade-1" />
+    ${product ? `<script type="application/ld+json">${productJsonLd(product, request)}</script><script type="application/ld+json">${breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "ADK Store", path: "/store" }, { name: product.title || product.name, path: `/store/${handle}` }], request)}</script>` : ""}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -276,16 +306,22 @@ function renderStoreProductPage(product, request) {
           <div class="product-detail__chips"><span data-detail-status>${escapeHtml(product?.status || "Review Required")}</span><span data-detail-fitment>${escapeHtml(product?.fitment || "Application review")}</span><span data-detail-material>${escapeHtml(product?.material || "ADK fabricated")}</span></div>
           <div data-variant-wrap class="variant-selector"></div>
           <dl class="spec-fields detail-specs"><div><dt>Fitment</dt><dd data-detail-fitment-text>${escapeHtml(product?.fitment || "Application review")}</dd></div><div><dt>Material</dt><dd data-detail-material-text>${escapeHtml(product?.material || "ADK fabricated")}</dd></div><div><dt>Lead Time</dt><dd data-detail-lead>${escapeHtml(product?.leadTime || "Confirmed after review")}</dd></div><div><dt>Shipping / Pickup</dt><dd data-detail-shipping>${escapeHtml(product?.shippingNotes || "Secure checkout powered by Shopify. Pickup can be arranged by ADK.")}</dd></div></dl>
+          <aside class="fitment-review-panel" aria-label="ADK fitment review">
+            <p class="eyebrow">Fitment Review</p>
+            <h2>Not sure this fits your truck?</h2>
+            <p>Send ADK the truck year, model, axle setup, ride-height goal, photos, and measurements before ordering. Built-to-order products are reviewed around the vehicle, not just the cart.</p>
+            <a class="text-link" href="/build-request?product=${encodeURIComponent(handle)}&intent=fitment-review">Request Fitment Review</a>
+          </aside>
           <div class="product-detail__notes"><h2>Build Notes</h2><p data-detail-notes>${escapeHtml(product?.buildNotes || "")}</p><ul data-detail-specs></ul></div>
-          <div class="product-detail__actions"><label class="quantity-control">Qty<input type="number" min="1" value="1" data-detail-qty /></label><button class="button line-button" type="button" data-detail-primary data-product-id="${escapeHtml(product?.id || "")}">${product?.requestPricing ? "Request Pricing" : "Add To Cart"}</button><button class="button line-button" type="button" data-buy-now>Buy Now</button></div>
+          <div class="product-detail__actions"><label class="quantity-control">Qty<input type="number" min="1" value="1" data-detail-qty /></label><button class="button line-button" type="button" data-detail-primary data-product-id="${escapeHtml(product?.id || "")}">${product?.requestPricing ? "Request Fitment Review" : "Add To Cart"}</button>${product?.requestPricing ? "" : `<button class="button line-button" type="button" data-buy-now>Buy Now</button>`}</div>
         </div>
       </section>
       <section class="section related-products" aria-labelledby="related-title"><div class="section-heading reveal"><p class="eyebrow">Related Products</p><h2 id="related-title">More From The ADK Store</h2></div><div class="store-grid store-grid--compact" data-related-products></div></section>
     </main>
     <footer class="site-footer footer-seven" id="footer"><div class="footer-seven__container"><div class="footer-seven__top"><div class="footer-seven__brand"><div class="footer-seven__logo-row"><a href="/"><img src="https://d2xsxph8kpxj0f.cloudfront.net/310419663029344895/Y6P4wESsnqturPWjC5KcFB/adk-logo-badge_452696c8.png" alt="After Dark Kreations ADK logo" /></a><h2>After Dark Kreations</h2></div><p>American-made welding, CAD-supported fabrication, truck parts, trailer repair, air ride, hydraulics, overland accessories, and one-off metalwork built in Henderson, Nevada.</p></div><div class="footer-seven__sections"><div><h3>Contact</h3><ul><li><a href="tel:+17028109021">(702) 810-9021</a></li><li><a href="mailto:Rudy@AfterDarkKreations.com">Rudy@AfterDarkKreations.com</a></li><li><a href="https://www.google.com/maps/place/2053+Pabco+Rd,+Henderson,+NV+89011">2053 Pabco Rd, Henderson, NV 89011</a></li></ul></div><div><h3>Store</h3><ul><li><a href="/store">ADK Store</a></li><li><a href="/cart">Cart</a></li><li><a href="/build-request">Request Quote</a></li></ul></div></div></div><div class="footer-seven__bottom"><p>© 2026 After Dark Kreations / ADK. Proudly Made in America.</p></div></div></footer>
     ${dataScript}
-    <script src="/lib/shopify.js?v=20260518-dark-sections-1" defer></script>
-    <script src="/script.js?v=20260518-dark-sections-1" defer></script>
+    <script src="/lib/shopify.js?v=20260606-competitor-upgrade-1" defer></script>
+    <script src="/script.js?v=20260606-competitor-upgrade-1" defer></script>
   </body>
 </html>`;
 }
@@ -863,20 +899,17 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (dynamicStoreMatch && method === "GET") {
-      const staticIndex = path.join(root, "store", dynamicStoreMatch[1], "index.html");
-      if (!fs.existsSync(staticIndex) || shopify.configured()) {
-        let product = null;
-        try {
-          product = shopify.configured()
-            ? await shopify.getProductByHandle(dynamicStoreMatch[1])
-            : normalizeLocalProduct(localProductByHandle(dynamicStoreMatch[1]));
-        } catch {
-          product = normalizeLocalProduct(localProductByHandle(dynamicStoreMatch[1]));
-        }
-        if (!product) { sendHtml(response, 404, renderStoreProductPage(null, request), baseSecurityHeaders()); return; }
-        sendHtml(response, 200, renderStoreProductPage(product, request), baseSecurityHeaders());
-        return;
+      let product = null;
+      try {
+        product = shopify.configured()
+          ? await shopify.getProductByHandle(dynamicStoreMatch[1])
+          : normalizeLocalProduct(localProductByHandle(dynamicStoreMatch[1]));
+      } catch {
+        product = normalizeLocalProduct(localProductByHandle(dynamicStoreMatch[1]));
       }
+      if (!product) { sendHtml(response, 404, renderStoreProductPage(null, request), baseSecurityHeaders()); return; }
+      sendHtml(response, 200, renderStoreProductPage(product, request), baseSecurityHeaders());
+      return;
     }
 
     /* ----- Static files ----- */

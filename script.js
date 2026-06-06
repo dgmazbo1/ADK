@@ -890,8 +890,12 @@ function updateCartCount() {
 }
 
 function productCard(product, compact = false) {
-  const canBuy = !product.requestPricing && typeof product.price === "number" && (product.inventory === null || product.inventory > 0) && product.variantId;
+  const hasFixedPrice = !product.requestPricing && typeof product.price === "number" && (product.inventory === null || product.inventory > 0);
+  const canBuy = hasFixedPrice && (product.variantId || product.source === "local-fallback" || !window.ADKShopify?.isConfigured?.());
   const status = product.status || (canBuy ? "In Stock" : "Request Pricing");
+  const reviewNote = canBuy
+    ? "Fixed-price products move through secure Shopify checkout when connected."
+    : "Fitment review recommended: send truck details, photos, and measurements before pricing.";
   return `
     <article class="store-card ${compact ? "store-card--compact" : ""}" data-category="${escapeHtml(product.category)}" data-product-id="${escapeHtml(product.id)}">
       <a class="store-card__image" href="/store/${escapeHtml(product.slug)}">
@@ -908,12 +912,13 @@ function productCard(product, compact = false) {
           <div><dt>Lead Time</dt><dd>${escapeHtml(product.leadTime || "Confirmed at checkout")}</dd></div>
           <div><dt>Price</dt><dd>${formatPrice(product.price)}</dd></div>
         </dl>
+        <p class="store-card__note">${escapeHtml(reviewNote)}</p>
         <div class="store-card__actions">
           <a class="text-link" href="/store/${escapeHtml(product.slug)}">View Product</a>
           ${
             canBuy
               ? `<button class="button line-button" type="button" data-add-cart="${escapeHtml(product.id)}">Add To Cart</button>`
-              : `<a class="button line-button" href="/build-request?product=${encodeURIComponent(product.slug || product.handle || product.id)}">Request Quote</a>`
+              : `<a class="button line-button" href="/build-request?product=${encodeURIComponent(product.slug || product.handle || product.id)}&intent=fitment-review">Request Fitment Review</a>`
           }
         </div>
       </div>
@@ -995,8 +1000,8 @@ document.addEventListener("click", (event) => {
   if (!addButton) return;
   const product = ecommerceProducts.find((item) => item.id === addButton.dataset.addCart || item.id === addButton.dataset.productId);
   if (!product) return;
-  if (product.requestPricing || typeof product.price !== "number" || (!window.ADKShopify?.isConfigured?.() && !product.variantId)) {
-    window.location.href = `/build-request?product=${encodeURIComponent(product.slug || product.handle || product.id)}`;
+  if (product.requestPricing || typeof product.price !== "number" || (window.ADKShopify?.isConfigured?.() && !product.variantId)) {
+    window.location.href = `/build-request?product=${encodeURIComponent(product.slug || product.handle || product.id)}&intent=fitment-review`;
     return;
   }
   const quantity = Number(document.querySelector("[data-detail-qty]")?.value || 1);
@@ -1060,8 +1065,8 @@ function renderProductDetail() {
     .join("");
   primary.dataset.productId = product.id;
   primary.dataset.addCart = product.id;
-  const detailCanBuy = !product.requestPricing && typeof product.price === "number" && product.variantId;
-  primary.textContent = detailCanBuy ? "Add To Cart" : "Request Quote";
+  const detailCanBuy = !product.requestPricing && typeof product.price === "number" && (product.variantId || product.source === "local-fallback" || !window.ADKShopify?.isConfigured?.());
+  primary.textContent = detailCanBuy ? "Add To Cart" : "Request Fitment Review";
   const buyNow = detail.querySelector("[data-buy-now]");
   if (buyNow) {
     buyNow.hidden = !detailCanBuy;
